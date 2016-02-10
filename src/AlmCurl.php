@@ -8,6 +8,8 @@
 
 namespace StepanSib\AlmClient;
 
+use StepanSib\AlmClient\Exception\AlmExceptionGenerator;
+
 Class AlmCurl
 {
 
@@ -64,6 +66,8 @@ Class AlmCurl
 
         $this->result = curl_exec($this->curl);
         $this->info = curl_getinfo($this->curl);
+
+        return $this;
     }
 
     public function getResult()
@@ -74,6 +78,29 @@ Class AlmCurl
     public function getInfo()
     {
         return $this->info;
+    }
+
+    public function getHttpCode()
+    {
+        if (null !== $this->getInfo()) {
+            $info = $this->getInfo();
+            return $info['http_code'];
+        } else {
+            return null;
+        }
+    }
+
+    public function createCookie()
+    {
+        $this->curlInit();
+
+        if ($this->curl !== null) {
+            curl_setopt($this->curl, CURLOPT_COOKIEJAR, $this->cookieStorage->createCurlCookieFile());
+        } else {
+            AlmExceptionGenerator::throwCurlNotInitialized();
+        }
+
+        return $this;
     }
 
     protected function clearResults()
@@ -87,10 +114,11 @@ Class AlmCurl
         if ($this->curl !== null) {
             curl_close($this->curl);
             $this->curl = null;
-        }
 
-        $this->cookieStorage->deleteCurlCookieFile();
-        $this->clearResults();
+            $this->clearResults();
+        } else {
+            AlmExceptionGenerator::throwCurlNotInitialized();
+        }
 
         return $this;
     }

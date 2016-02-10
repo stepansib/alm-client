@@ -21,4 +21,9 @@ class AlmExceptionGenerator
         throw new AlmConnectionException('Curl cookie file does not exist');
     }
 
+    public static function throwCurlNotInitialized()
+    {
+        throw new AlmConnectionException('Curl not initialized');
+    }
+
 }

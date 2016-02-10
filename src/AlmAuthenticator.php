@@ -60,36 +60,17 @@ class AlmAuthenticator
     {
 
         $headers = array("GET /HTTP/1.1", "Authorization: Basic " . base64_encode($this->connectionOptions['username'] . ":" . $this->connectionOptions['password']));
-        $curl = $this->getCurl($this->routes->getLoginUrl(), false, $headers);
 
-        curl_setopt($curl, CURLOPT_COOKIEJAR, $this->cookieStorage->createCurlCookieFile());
+        $httpCode = $this->curl->createCookie()->exec($this->routes->getLoginUrl(), false, $headers)->getHttpCode();
+        $this->curl->close();
 
-        curl_exec($curl);
-        $response = curl_getinfo($curl);
-
-        $this->curlClose();
-
-        if ($response['http_code'] == '200') {
+        if ($httpCode == '200') {
             return true;
         } else {
             $this->cookieStorage->deleteCurlCookieFile();
             return false;
         }
     }
-
-    /*
-    public function getDefect($defectId)
-    {
-
-        $defectUrl = "/qcbin/rest/domains/" . $this->connectionOptions['domain'] . "/projects/" . $this->connectionOptions['project'] . "/defects/" . $defectId;
-        $curl = $this->getCurl($defectUrl);
-
-        $xml = simplexml_load_string(curl_exec($curl));
-        print_r($xml);
-
-        $this->curlClose();
-    }
-    */
 
     /**
      * Simple checks - whether user is authenticated in ALM
@@ -99,14 +80,10 @@ class AlmAuthenticator
     public function isAuthenticated()
     {
         if ($this->cookieStorage->isCurlCookieFileExist()) {
-            $curl = $this->getCurl($this->routes->getIsAuthenticatedUrl());
+            $httpCode = $this->curl->exec($this->routes->getIsAuthenticatedUrl())->getHttpCode();
+            $this->curl->close();
 
-            curl_exec($curl);
-            $response = curl_getinfo($curl);
-
-            $this->curlClose();
-
-            if ($response['http_code'] == '401') {
+            if ($httpCode == '401') {
                 return false;
             } else {
                 return true;
@@ -123,8 +100,9 @@ class AlmAuthenticator
     {
         $this->curl->exec($this->routes->getLogoutUrl());
         $this->curl->close();
+        $this->cookieStorage->deleteCurlCookieFile();
 
-        return;
+        return $this;
     }
 
 }
