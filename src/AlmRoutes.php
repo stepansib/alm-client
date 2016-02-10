@@ -39,9 +39,9 @@ class AlmRoutes
         return $this->hostUrl . '/qcbin/rest/is-authenticated';
     }
 
-    public function getDefectUrl($defectId)
+    public function getEntityUrl()
     {
-        return $this->hostUrl . '/qcbin/rest/domains/' . $this->domain . '/projects/' . $this->project . '/defects/' . $defectId;
+        return $this->hostUrl . '/qcbin/rest/domains/' . $this->domain . '/projects/' . $this->project;
     }
 
 }

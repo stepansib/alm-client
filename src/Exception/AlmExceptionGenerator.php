@@ -11,9 +11,9 @@ namespace StepanSib\AlmClient\Exception;
 class AlmExceptionGenerator
 {
 
-    public static function throwCurlConnectionTimeOut()
+    public static function throwCurlError($err)
     {
-        throw new AlmConnectionException('Сonnection timeout');
+        throw new AlmConnectionException('Curl error: ' . $err);
     }
 
     public static function throwCookieFileDoesNotExist()
@@ -24,6 +24,11 @@ class AlmExceptionGenerator
     public static function throwCurlNotInitialized()
     {
         throw new AlmConnectionException('Curl not initialized');
+    }
+
+    public static function throwEntityTypeNotSpecified()
+    {
+        throw new AlmException('Entity not specified');
     }
 
 }

@@ -37,8 +37,8 @@ Class AlmCurl
             curl_setopt($this->curl, CURLOPT_HEADER, 0);
             curl_setopt($this->curl, CURLOPT_HTTPGET, 1);
             curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT, 2); //connection timeout
-            curl_setopt($this->curl, CURLOPT_TIMEOUT, 5); //overall timeout
+            curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT, 5); //connection timeout
+            curl_setopt($this->curl, CURLOPT_TIMEOUT, 30); //overall timeout
 
             $this->clearResults();
         }
@@ -64,8 +64,13 @@ Class AlmCurl
             curl_setopt($this->curl, CURLOPT_COOKIEFILE, null);
         }
 
-        $this->result = curl_exec($this->curl);
-        $this->info = curl_getinfo($this->curl);
+        $result = curl_exec($this->curl);
+        if (curl_errno($this->curl) === 0) {
+            $this->result = curl_exec($this->curl);
+            $this->info = curl_getinfo($this->curl);
+        } else {
+            AlmExceptionGenerator::throwCurlError(curl_error($this->curl));
+        }
 
         return $this;
     }

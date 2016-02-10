@@ -9,8 +9,6 @@
 
 namespace StepanSib\AlmClient;
 
-use StepanSib\AlmClient\Exception\AlmConnectionException;
-
 class AlmAuthenticator
 {
 

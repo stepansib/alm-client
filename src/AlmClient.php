@@ -23,6 +23,9 @@ Class AlmClient
     /** @var  AlmRoutes */
     protected $routes;
 
+    /** @var  AlmEntityManager */
+    protected $manager;
+
     /**
      * AlmClient constructor.
      * @param array $connectionOptions
@@ -33,6 +36,7 @@ Class AlmClient
         $this->curl = new AlmCurl($this->cookieStorage);
         $this->routes = new AlmRoutes($connectionOptions);
         $this->authenticator = new AlmAuthenticator($connectionOptions, $this->curl, $this->cookieStorage, $this->routes);
+        $this->manager = new AlmEntityManager($connectionOptions, $this->curl,$this->routes);
     }
 
     /**
@@ -65,6 +69,14 @@ Class AlmClient
     public function getCookieStorage()
     {
         return $this->cookieStorage;
+    }
+
+    /**
+     * @return AlmEntityManager
+     */
+    public function getManager()
+    {
+        return $this->manager;
     }
 
 }
