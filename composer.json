@@ -1,0 +1,15 @@
+{
+    "name": "stepansib/alm-client",
+    "description": "HP AlM rest client",
+    "authors": [
+        {
+            "name": "Stepan Yudin",
+            "email": "stepan.sib@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "StepanSib\\AlmClient\\": "src\\"
+        }
+    }
+}
