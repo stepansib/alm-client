@@ -9,14 +9,8 @@
 
 namespace StepanSib\AlmClient;
 
-class AlmDefect
+class AlmEntity
 {
-
-    const STATUS_NEW = "New";
-    const STATUS_OPEN = "Open";
-    const STATUS_TESTED = "Tested";
-    const STATUS_FIXED = "Fixed";
-    const STATUS_ACCEPTED = "Accepted";
 
     /** @var integer */
     protected $id;
@@ -35,6 +29,9 @@ class AlmDefect
 
     /** @var  string */
     protected $status;
+
+    /** @var  string */
+    protected $priority;
 
     public function setId($id)
     {
@@ -94,6 +91,16 @@ class AlmDefect
     public function getStatus()
     {
         return $this->owner;
+    }
+
+    public function setPriority($priority)
+    {
+        $this->priority = $priority;
+    }
+
+    public function getPriority()
+    {
+        return $this->priority;
     }
 
 }

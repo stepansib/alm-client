@@ -11,37 +11,37 @@ namespace StepanSib\AlmClient;
 class AlmRoutes
 {
 
-    protected $hostUrl;
+    protected $host;
 
     protected $domain;
 
     protected $project;
 
-    public function __construct(array $connectionOptions)
+    public function __construct($host, $domain, $project)
     {
-        $this->hostUrl = $connectionOptions['host'];
-        $this->domain = $connectionOptions['domain'];
-        $this->project = $connectionOptions['project'];
+        $this->host = $host;
+        $this->domain = $domain;
+        $this->project = $project;
     }
 
     public function getLoginUrl()
     {
-        return $this->hostUrl . '/qcbin/authentication-point/authenticate';
+        return $this->host . '/qcbin/authentication-point/authenticate';
     }
 
     public function getLogoutUrl()
     {
-        return $this->hostUrl . '/qcbin/authentication-point/logout';
+        return $this->host . '/qcbin/authentication-point/logout';
     }
 
     public function getIsAuthenticatedUrl()
     {
-        return $this->hostUrl . '/qcbin/rest/is-authenticated';
+        return $this->host . '/qcbin/rest/is-authenticated';
     }
 
     public function getEntityUrl()
     {
-        return $this->hostUrl . '/qcbin/rest/domains/' . $this->domain . '/projects/' . $this->project;
+        return $this->host . '/qcbin/rest/domains/' . $this->domain . '/projects/' . $this->project;
     }
 
 }

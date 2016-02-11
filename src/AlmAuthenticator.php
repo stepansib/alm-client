@@ -12,9 +12,6 @@ namespace StepanSib\AlmClient;
 class AlmAuthenticator
 {
 
-    /** @var array */
-    protected $connectionOptions;
-
     /** @var  AlmCurl */
     protected $curl;
 
@@ -24,16 +21,24 @@ class AlmAuthenticator
     /** @var  AlmRoutes */
     protected $routes;
 
+    /** @var  string */
+    protected $userName;
+
+    /** @var  string */
+    protected $password;
+
     /**
      * AlmAuthenticator constructor.
-     * @param array $connectionOptions
+     * @param $userName
+     * @param $password
      * @param AlmCurl $almCurl
      * @param AlmCurlCookieStorage $cookieStorage
      * @param AlmRoutes $routes
      */
-    public function __construct(array $connectionOptions, AlmCurl $almCurl, AlmCurlCookieStorage $cookieStorage, AlmRoutes $routes)
+    public function __construct($userName, $password, AlmCurl $almCurl, AlmCurlCookieStorage $cookieStorage, AlmRoutes $routes)
     {
-        $this->connectionOptions = $connectionOptions;
+        $this->userName = $userName;
+        $this->password = $password;
         $this->curl = $almCurl;
         $this->cookieStorage = $cookieStorage;
         $this->routes = $routes;
@@ -42,22 +47,14 @@ class AlmAuthenticator
     }
 
     /**
-     * @return array
-     */
-    public function getConnectionOptions()
-    {
-        return $this->connectionOptions;
-    }
-
-    /**
-     * Tries to login with credentials specified in $connectionOptions array
+     * Tries to login with credentials specified
      *
      * @return bool
      */
     public function login()
     {
 
-        $headers = array("GET /HTTP/1.1", "Authorization: Basic " . base64_encode($this->connectionOptions['username'] . ":" . $this->connectionOptions['password']));
+        $headers = array("GET /HTTP/1.1", "Authorization: Basic " . base64_encode($this->userName . ":" . $this->password));
 
         $httpCode = $this->curl->createCookie()->exec($this->routes->getLoginUrl(), false, $headers)->getHttpCode();
         $this->curl->close();

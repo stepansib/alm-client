@@ -11,29 +11,31 @@ namespace StepanSib\AlmClient;
 class AlmEntityManager
 {
 
-    const ENTITY_DEFECT = 'defects';
-
-    const ENTITY_TEST = 'tests';
-
-    /** @var array */
-    protected $connectionOptions;
-
     /** @var AlmCurl */
     protected $curl;
 
     /** @var AlmRoutes */
     protected $routes;
 
-    public function __construct(array $connectionOptions, AlmCurl $curl, AlmRoutes $routes)
+    /** @var AlmEntityExtractorInterface */
+    protected $entityEtractor;
+
+    public function __construct(AlmCurl $curl, AlmRoutes $routes, AlmEntityExtractorInterface $fieldMapper)
     {
         $this->routes = $routes;
         $this->curl = $curl;
-        $this->connectionOptions = $connectionOptions;
+        $this->setEntityExtractor($fieldMapper);
     }
 
     public function createQuery()
     {
-        return new AlmQuery($this->connectionOptions, $this->curl, $this->routes);
+        return new AlmQuery($this->curl, $this->routes, $this->entityEtractor);
+    }
+
+    public function setEntityExtractor(AlmEntityExtractorInterface $fieldMapper)
+    {
+        $this->entityEtractor = $fieldMapper;
+        return $this;
     }
 
 }
