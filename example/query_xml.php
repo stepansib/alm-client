@@ -7,6 +7,7 @@
  */
 
 require 'config.php';
+require 'header_xml.php';
 
 use StepanSib\AlmClient\AlmClient;
 use StepanSib\AlmClient\AlmEntityManager;
@@ -19,5 +20,4 @@ $defectsRawResponse = $almClient->getManager()->getBy(AlmEntityManager::ENTITY_T
     'owner' => 'syudin',
 ), AlmEntityManager::HYDRATION_NONE);
 
-header("Content-type: text/xml");
 echo $defectsRawResponse;
