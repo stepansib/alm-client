@@ -51,19 +51,4 @@ class AlmEntityExtractor implements AlmEntityExtractorInterface
         return $entity;
     }
 
-    public function toString(\SimpleXMLElement $entityXml)
-    {
-        $entityXml = $entityXml->Fields[0];
-        foreach ($entityXml->Field as $field) {
-            foreach ($this->fieldsMapping as $xmlPropertyMapping => $entityPropertyMapping) {
-                if ($field->attributes()->Name == $xmlPropertyMapping) {
-                    $setter = 'set' . $entityPropertyMapping;
-                    if (method_exists($entity, $setter)) {
-                        $entity->$setter($field->Value[0]);
-                    }
-                }
-            }
-        }
-    }
-
 }
