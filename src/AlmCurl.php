@@ -9,7 +9,6 @@
 namespace StepanSib\AlmClient;
 
 use StepanSib\AlmClient\Exception\AlmCurlException;
-use StepanSib\AlmClient\Exception\AlmException;
 
 Class AlmCurl
 {
