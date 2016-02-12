@@ -13,7 +13,6 @@ use StepanSib\AlmClient\Exception\AlmQueryException;
 
 class AlmQuery
 {
-
     const ENTITY_DEFECT = 'defects';
     const ENTITY_TEST = 'tests';
 
@@ -69,6 +68,7 @@ class AlmQuery
 
     /**
      * @return array
+     * @throws AlmQueryException
      */
     public function execute()
     {
@@ -92,7 +92,7 @@ class AlmQuery
         $arr = array();
 
         foreach ($xml->Entity as $entity) {
-            array_push($arr, $this->entityExtractor->fromXml($entity));
+            array_push($arr, $this->entityExtractor->extract($entity));
         }
 
         return $arr;

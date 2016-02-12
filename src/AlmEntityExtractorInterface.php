@@ -13,8 +13,8 @@ interface AlmEntityExtractorInterface
 
     public function __construct($entityClass, array $fieldsMapping);
 
-    public function fromXml(\SimpleXMLElement $entityXml);
+    public function extract(\SimpleXMLElement $entityXml);
 
-    public function toXml();
+    public function pack();
 
 }

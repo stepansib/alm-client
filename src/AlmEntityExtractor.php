@@ -23,25 +23,24 @@ class AlmEntityExtractor implements AlmEntityExtractorInterface
         $this->className = $entityClass;
     }
 
-    public function toXml()
+    public function pack()
     {
-        // TODO: Implement toXml() method.
+        // TODO: Implement pack() method.
     }
 
     /**
      * @param \SimpleXMLElement $entityXml
      * @return AlmEntity
      */
-    public function fromXml(\SimpleXMLElement $entityXml)
+    public function extract(\SimpleXMLElement $entityXml)
     {
         $entity = new AlmEntity();
 
         $entityXml = $entityXml->Fields[0];
         foreach ($entityXml->Field as $field) {
-            //echo $field->attributes()->Name . ': ' . $field->Value[0] . '<br/>';
-            foreach ($this->fieldsMapping as $xmlProperty => $entityProperty) {
-                if ($field->attributes()->Name == $xmlProperty) {
-                    $setter = 'set' . $xmlProperty;
+            foreach ($this->fieldsMapping as $xmlPropertyMapping => $entityPropertyMapping) {
+                if ($field->attributes()->Name == $xmlPropertyMapping) {
+                    $setter = 'set' . $entityPropertyMapping;
                     if (method_exists($entity, $setter)) {
                         $entity->$setter($field->Value[0]);
                     }
@@ -50,7 +49,21 @@ class AlmEntityExtractor implements AlmEntityExtractorInterface
         }
 
         return $entity;
+    }
 
+    public function toString(\SimpleXMLElement $entityXml)
+    {
+        $entityXml = $entityXml->Fields[0];
+        foreach ($entityXml->Field as $field) {
+            foreach ($this->fieldsMapping as $xmlPropertyMapping => $entityPropertyMapping) {
+                if ($field->attributes()->Name == $xmlPropertyMapping) {
+                    $setter = 'set' . $entityPropertyMapping;
+                    if (method_exists($entity, $setter)) {
+                        $entity->$setter($field->Value[0]);
+                    }
+                }
+            }
+        }
     }
 
 }
