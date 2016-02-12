@@ -69,9 +69,10 @@ Class AlmCurl
 
         if (count($headers) > 0) {
             curl_setopt($this->curl, CURLOPT_HTTPHEADER, $headers);
-        } else {
-            curl_setopt($this->curl, CURLOPT_HTTPHEADER, array());
+            return $this;
         }
+
+        curl_setopt($this->curl, CURLOPT_HTTPHEADER, array());
         return $this;
     }
 

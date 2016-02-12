@@ -49,11 +49,10 @@ class AlmEntityExtractor
                 foreach ($this->fieldsMapping as $xmlPropertyMapping => $entityPropertyMapping) {
                     if ($field->attributes()->Name == $xmlPropertyMapping) {
                         $setter = 'set' . $entityPropertyMapping;
-                        if (method_exists($entity, $setter)) {
-                            $entity->$setter($field->Value[0]);
-                        } else {
-                            throw new \Exception('Setter \'' . $setter . '\' not found in ' . get_class($entity));
+                        if (!method_exists($entity, $setter)) {
+                            throw new AlmEntityExtractorException('Setter \'' . $setter . '\' not found in ' . get_class($entity));
                         }
+                        $entity->$setter($field->Value[0]);
                     }
                 }
             }

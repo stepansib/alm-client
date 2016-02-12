@@ -107,13 +107,13 @@ class AlmQuery
     {
         if (null === $this->entity) {
             throw new AlmQueryException('Query selection entity type not specified');
-        } else {
-            $url = $this->routes->getEntityUrl() . '/' . $this->entity;
-            if (count($this->criterias) > 0) {
-                $url .= '?query={' . implode(';', $this->criterias) . '}';
-            }
-            return $url;
         }
+
+        $url = $this->routes->getEntityUrl() . '/' . $this->entity;
+        if (count($this->criterias) > 0) {
+            $url .= '?query={' . implode(';', $this->criterias) . '}';
+        }
+        return $url;
     }
 
 }

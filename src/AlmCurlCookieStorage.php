@@ -42,9 +42,8 @@ class AlmCurlCookieStorage
     {
         if ($this->isCurlCookieFileExist()) {
             return $_SESSION[self::SESSION_COOKIE_FILE_KEY];
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
