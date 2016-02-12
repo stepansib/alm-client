@@ -8,8 +8,6 @@
 
 namespace StepanSib\AlmClient;
 
-use StepanSib\AlmClient\Exception\AlmExceptionGenerator;
-
 class AlmCurlCookieStorage
 {
 

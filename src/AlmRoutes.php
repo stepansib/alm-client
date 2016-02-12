@@ -34,7 +34,7 @@ class AlmRoutes
         return $this->host . '/qcbin/authentication-point/logout';
     }
 
-    public function getIsAuthenticatedUrl()
+    public function getAuthenticationCheckUrl()
     {
         return $this->host . '/qcbin/rest/is-authenticated';
     }

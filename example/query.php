@@ -11,6 +11,7 @@ require 'menu.php';
 
 use StepanSib\AlmClient\AlmClient;
 use StepanSib\AlmClient\AlmQuery;
+use StepanSib\AlmClient\AlmEntity;
 
 $almClient = new AlmClient($connectionParams);
 $query = $almClient->getManager()->createQuery();
@@ -23,4 +24,16 @@ $plainQuery = $query->select(AlmQuery::ENTITY_DEFECT)
     ->getQueryUrl();
 
 // Execute query and iterate result
-var_dump($query->execute());
+$defects = $query->execute();
+
+/** @var AlmEntity $defect */
+foreach ($defects as $defect) {
+    echo 'Id: ' . $defect->getId() . '<br/>';
+    echo 'Status: ' . $defect->getStatus() . '<br/>';
+    echo 'Owner: ' . $defect->getOwner() . '<br/>';
+    echo 'Priority: ' . $defect->getPriority() . '<br/>';
+    echo 'Name: ' . $defect->getName() . '<br/>';
+    echo 'Description: ' . $defect->getDescription() . '<br/>';
+    echo 'Comments: ' . $defect->getComments() . '<br/>';
+    echo '<hr/>';
+}

@@ -81,7 +81,7 @@ class AlmAuthenticator
     public function isAuthenticated()
     {
         try {
-            $this->curl->exec($this->routes->getIsAuthenticatedUrl());
+            $this->curl->exec($this->routes->getAuthenticationCheckUrl());
             if ($this->curl->isResponseValid()) {
                 return true;
             } else {

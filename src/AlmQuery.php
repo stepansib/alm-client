@@ -8,7 +8,6 @@
 
 namespace StepanSib\AlmClient;
 
-use StepanSib\AlmClient\Exception\AlmExceptionGenerator;
 use StepanSib\AlmClient\Exception\AlmQueryException;
 
 class AlmQuery
@@ -106,7 +105,7 @@ class AlmQuery
      */
     public function getQueryUrl()
     {
-        if (null == $this->entity) {
+        if (null === $this->entity) {
             throw new AlmQueryException('Query selection entity type not specified');
         } else {
             $url = $this->routes->getEntityUrl() . '/' . $this->entity;
