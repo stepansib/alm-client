@@ -18,7 +18,7 @@ $query = $almClient->getManager()->createQuery();
 
 // Create query and get result URL
 $plainQuery = $query->select(AlmQuery::ENTITY_DEFECT)
-    ->where('id', '>=5000')
+    ->where('id', '=50000')
     ->where('status', 'Open')
     ->where('owner', 'syudin')
     ->getQueryUrl();

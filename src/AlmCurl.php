@@ -96,7 +96,7 @@ Class AlmCurl
             if (!$this->isResponseValid()) {
                 $httpCodeConstantName = get_class($this) . '::HTTP_' . $this->getHttpCode();
                 if (defined($httpCodeConstantName)) {
-                    throw new AlmCurlException($this->getHttpCode() . ': ' . constant($httpCodeConstantName));
+                    throw new AlmCurlException(constant($httpCodeConstantName));
                 } else {
                     throw new AlmCurlException('Disallowed HTTP response code: ' . $this->getHttpCode());
                 }

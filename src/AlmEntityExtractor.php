@@ -43,7 +43,7 @@ class AlmEntityExtractor
     public function extract(\SimpleXMLElement $entityXml)
     {
         try {
-            $entity = new AlmEntity();
+            $entity = new $this->className();
             $entityXml = $entityXml->Fields[0];
             foreach ($entityXml->Field as $field) {
                 foreach ($this->fieldsMapping as $xmlPropertyMapping => $entityPropertyMapping) {

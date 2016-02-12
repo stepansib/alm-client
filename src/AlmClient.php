@@ -44,6 +44,7 @@ Class AlmClient
             'priority' => 'priority',
             'status' => 'status',
         ));
+
         $this->cookieStorage = new AlmCurlCookieStorage();
         $this->curl = new AlmCurl($this->cookieStorage);
         $this->routes = new AlmRoutes($connectionOptions['host'], $connectionOptions['domain'], $connectionOptions['project']);
