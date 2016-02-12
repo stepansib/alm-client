@@ -1,6 +1,7 @@
 {
     "name": "stepansib/alm-client",
-    "description": "HP AlM rest client",
+    "description": "HP ALM REST Client",
+    "license": "MIT",
     "authors": [
         {
             "name": "Stepan Yudin",
