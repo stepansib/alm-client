@@ -55,31 +55,30 @@ Class AlmCurl
         return $this;
     }
 
-    /**
-     * @param $url
-     * @param bool $useCookie
-     * @param array $headers
-     * @return $this
-     * @throws AlmCurlException
-     * @throws AlmException
-     */
-    public function exec($url, $useCookie = true, array $headers = array())
+    public function setHeaders(array $headers = array())
     {
         $this->curlInit();
-
-        curl_setopt($this->curl, CURLOPT_URL, $url);
 
         if (count($headers) > 0) {
             curl_setopt($this->curl, CURLOPT_HTTPHEADER, $headers);
         } else {
             curl_setopt($this->curl, CURLOPT_HTTPHEADER, array());
         }
+        return $this;
+    }
 
-        if ($useCookie) {
-            curl_setopt($this->curl, CURLOPT_COOKIEFILE, $this->cookieStorage->getCurlCookieFile());
-        } else {
-            curl_setopt($this->curl, CURLOPT_COOKIEFILE, null);
-        }
+    /**
+     * @param $url
+     * @return $this
+     * @throws AlmCurlException
+     * @throws AlmException
+     */
+    public function exec($url)
+    {
+        $this->curlInit();
+
+        curl_setopt($this->curl, CURLOPT_URL, $url);
+        curl_setopt($this->curl, CURLOPT_COOKIEFILE, $this->cookieStorage->getCurlCookieFile());
 
         $result = curl_exec($this->curl);
 

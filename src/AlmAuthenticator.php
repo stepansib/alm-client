@@ -59,7 +59,7 @@ class AlmAuthenticator
         try {
             $headers = array("GET /HTTP/1.1", "Authorization: Basic " . base64_encode($this->userName . ":" . $this->password));
 
-            $isValid = $this->curl->createCookie()->exec($this->routes->getLoginUrl(), false, $headers)->isResponseValid();
+            $isValid = $this->curl->createCookie()->setHeaders($headers)->exec($this->routes->getLoginUrl())->isResponseValid();
             $this->curl->close();
 
             if (!$isValid) {
