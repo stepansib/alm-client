@@ -12,8 +12,9 @@ use StepanSib\AlmClient\Exception\AlmQueryException;
 
 class AlmQuery
 {
-    const ENTITY_DEFECT = 'defects';
-    const ENTITY_TEST = 'tests';
+
+    const ENTITY_DEFECT = 'defect';
+    const ENTITY_TEST = 'test';
 
     /** @var AlmCurl */
     protected $curl;
@@ -22,7 +23,7 @@ class AlmQuery
     protected $criterias;
 
     /** @var  string */
-    protected $entity;
+    protected $entityTypeToSelect;
 
     /** @var AlmRoutes */
     protected $routes;
@@ -50,7 +51,7 @@ class AlmQuery
      */
     public function select($entityType)
     {
-        $this->entity = $entityType;
+        $this->entityTypeToSelect = $entityType . 's';
         return $this;
     }
 
@@ -105,11 +106,11 @@ class AlmQuery
      */
     public function getQueryUrl()
     {
-        if (null === $this->entity) {
+        if (null === $this->entityTypeToSelect) {
             throw new AlmQueryException('Query selection entity type not specified');
         }
 
-        $url = $this->routes->getEntityUrl() . '/' . $this->entity;
+        $url = $this->routes->getEntityUrl() . '/' . $this->entityTypeToSelect;
         if (count($this->criterias) > 0) {
             $url .= '?query={' . implode(';', $this->criterias) . '}';
         }

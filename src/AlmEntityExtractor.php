@@ -9,6 +9,7 @@
 namespace StepanSib\AlmClient;
 
 use StepanSib\AlmClient\Exception\AlmEntityExtractorException;
+use StepanSib\AlmClient\AlmEntityInterface;
 
 class AlmEntityExtractor
 {
@@ -17,7 +18,7 @@ class AlmEntityExtractor
     protected $fieldsMapping;
 
     /** @var  string */
-    protected $className;
+    protected $entityClass;
 
     /**
      * AlmEntityExtractor constructor.
@@ -27,12 +28,37 @@ class AlmEntityExtractor
     public function __construct($entityClass, array $fieldsMapping)
     {
         $this->fieldsMapping = $fieldsMapping;
-        $this->className = $entityClass;
+        $this->entityClass = $entityClass;
     }
 
-    public function pack()
+    /**
+     * @return string
+     */
+    public function getEntityClass()
     {
+        return $this->entityClass;
+    }
 
+    public function pack(AlmEntityInterface $entity)
+    {
+        //$xml = new \SimpleXMLElement('Entity');
+        $xml = new \SimpleXMLElement('<Entity></Entity>');
+        $xml->addAttribute('Type', $entity->getType());
+        $xmlFields = $xml->addChild('Fields');
+
+
+        foreach (array_flip($this->fieldsMapping) as $entityPropertyMapping => $xmlPropertyMapping) {
+            $getter = 'get' . $entityPropertyMapping;
+            if (!method_exists($entity, $getter)) {
+                throw new AlmEntityExtractorException('Getter \'' . $getter . '\' not found in ' . get_class($entity));
+            }
+
+            $xmlField = $xmlFields->addChild('Field');
+            $xmlField->addAttribute('Name', $xmlPropertyMapping);
+            $xmlField->addChild('Value', $entity->$getter());
+        }
+
+        return $xml;
     }
 
     /**
@@ -42,25 +68,23 @@ class AlmEntityExtractor
      */
     public function extract(\SimpleXMLElement $entityXml)
     {
-        try {
-            $entity = new $this->className();
-            $entityXml = $entityXml->Fields[0];
-            foreach ($entityXml->Field as $field) {
-                foreach ($this->fieldsMapping as $xmlPropertyMapping => $entityPropertyMapping) {
-                    if ($field->attributes()->Name == $xmlPropertyMapping) {
-                        $setter = 'set' . $entityPropertyMapping;
-                        if (!method_exists($entity, $setter)) {
-                            throw new AlmEntityExtractorException('Setter \'' . $setter . '\' not found in ' . get_class($entity));
-                        }
-                        $entity->$setter($field->Value[0]);
+        /** @var AlmEntityInterface $entity */
+        $entity = new $this->entityClass();
+        $entity->setType($entityXml->attributes()->Type);
+
+        $entityXml = $entityXml->Fields[0];
+        foreach ($entityXml->Field as $field) {
+            foreach ($this->fieldsMapping as $xmlPropertyMapping => $entityPropertyMapping) {
+                if ($field->attributes()->Name == $xmlPropertyMapping) {
+                    $setter = 'set' . $entityPropertyMapping;
+                    if (!method_exists($entity, $setter)) {
+                        throw new AlmEntityExtractorException('Setter \'' . $setter . '\' not found in ' . get_class($entity));
                     }
+                    $entity->$setter($field->Value[0]);
                 }
             }
-            return $entity;
-        } catch (\Exception $e) {
-            throw new AlmEntityExtractorException($e->getMessage());
         }
-
+        return $entity;
     }
 
 }

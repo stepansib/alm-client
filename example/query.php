@@ -18,7 +18,7 @@ $query = $almClient->getManager()->createQuery();
 
 // Create query and get result URL
 $plainQuery = $query->select(AlmQuery::ENTITY_DEFECT)
-    ->where('id', '=50000')
+    ->where('id', '>=5000')
     ->where('status', 'Open')
     ->where('owner', 'syudin')
     ->getQueryUrl();
@@ -28,6 +28,7 @@ $defects = $query->execute();
 
 /** @var AlmEntity $defect */
 foreach ($defects as $defect) {
+    echo 'Type: ' . $defect->getType() . '<br/>';
     echo 'Id: ' . $defect->getId() . '<br/>';
     echo 'Status: ' . $defect->getStatus() . '<br/>';
     echo 'Owner: ' . $defect->getOwner() . '<br/>';

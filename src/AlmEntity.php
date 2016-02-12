@@ -9,8 +9,13 @@
 
 namespace StepanSib\AlmClient;
 
-class AlmEntity
+use StepanSib\AlmClient\AlmEntityInterface;
+
+class AlmEntity implements AlmEntityInterface
 {
+
+    /** @var  string */
+    protected $type;
 
     /** @var integer */
     protected $id;
@@ -32,6 +37,16 @@ class AlmEntity
 
     /** @var  string */
     protected $priority;
+
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    public function getType()
+    {
+        return $this->type;
+    }
 
     public function setId($id)
     {
