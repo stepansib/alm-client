@@ -14,6 +14,14 @@ use StepanSib\AlmClient\Exception\AlmException;
 Class AlmCurl
 {
 
+    const HTTP_401 = '401: unauthenticated request';
+    const HTTP_403 = '403: unauthenticated request';
+    const HTTP_404 = '404: resource not found';
+    const HTTP_405 = '405: method not supported by resource';
+    const HTTP_406 = '406: unsupported ACCEPT type';
+    const HTTP_415 = '415: unsupported request content type';
+    const HTTP_500 = '500: Internal server error';
+
     /** @var resource */
     protected $curl;
 
@@ -71,7 +79,6 @@ Class AlmCurl
      * @param $url
      * @return $this
      * @throws AlmCurlException
-     * @throws AlmException
      */
     public function exec($url)
     {
@@ -87,28 +94,11 @@ Class AlmCurl
             $this->info = curl_getinfo($this->curl);
 
             if (!$this->isResponseValid()) {
-                switch ($this->getHttpCode()) {
-                    case '401':
-                        throw new AlmException('401: unauthenticated request');
-                        break;
-                    case '403':
-                        throw new AlmException('403: unauthenticated request');
-                        break;
-                    case '404':
-                        throw new AlmException('404: resource not found');
-                        break;
-                    case '405':
-                        throw new AlmException('405: method not supported by resource');
-                        break;
-                    case '406':
-                        throw new AlmException('406: unsupported ACCEPT type');
-                        break;
-                    case '415':
-                        throw new AlmException('415: unsupported request content type');
-                        break;
-                    case '500':
-                        throw new AlmException('500: Internal server error');
-                        break;
+                $httpCodeConstantName = get_class($this) . '::HTTP_' . $this->getHttpCode();
+                if (defined($httpCodeConstantName)) {
+                    throw new AlmCurlException($this->getHttpCode() . ': ' . constant($httpCodeConstantName));
+                } else {
+                    throw new AlmCurlException('Disallowed HTTP response code: ' . $this->getHttpCode());
                 }
             }
         } else {
