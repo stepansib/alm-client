@@ -8,6 +8,8 @@
 
 namespace StepanSib\AlmClient;
 
+use StepanSib\AlmClient\Exception\AlmCurlException;
+use StepanSib\AlmClient\Exception\AlmException;
 use StepanSib\AlmClient\Exception\AlmExceptionGenerator;
 
 Class AlmCurl
@@ -25,11 +27,19 @@ Class AlmCurl
     /** @var AlmCurlCookieStorage */
     protected $cookieStorage;
 
+    /**
+     * AlmCurl constructor.
+     * @param AlmCurlCookieStorage $cookieStorage
+     */
     public function __construct(AlmCurlCookieStorage $cookieStorage)
     {
         $this->cookieStorage = $cookieStorage;
+        return $this;
     }
 
+    /**
+     * @return $this
+     */
     private function curlInit()
     {
         if (null === $this->curl) {
@@ -43,9 +53,17 @@ Class AlmCurl
             $this->clearResults();
         }
 
-        return;
+        return $this;
     }
 
+    /**
+     * @param $url
+     * @param bool $useCookie
+     * @param array $headers
+     * @return $this
+     * @throws AlmCurlException
+     * @throws AlmException
+     */
     public function exec($url, $useCookie = true, array $headers = array())
     {
         $this->curlInit();
@@ -65,26 +83,62 @@ Class AlmCurl
         }
 
         $result = curl_exec($this->curl);
+
         if (curl_errno($this->curl) === 0) {
-            $this->result = curl_exec($this->curl);
+            $this->result = $result;
             $this->info = curl_getinfo($this->curl);
+
+            if (!$this->isResponseValid()) {
+                switch ($this->getHttpCode()) {
+                    case '401':
+                        throw new AlmException('401: unauthenticated request');
+                        break;
+                    case '403':
+                        throw new AlmException('403: unauthenticated request');
+                        break;
+                    case '404':
+                        throw new AlmException('404: resource not found');
+                        break;
+                    case '405':
+                        throw new AlmException('405: method not supported by resource');
+                        break;
+                    case '406':
+                        throw new AlmException('406: unsupported ACCEPT type');
+                        break;
+                    case '415':
+                        throw new AlmException('415: unsupported request content type');
+                        break;
+                    case '500':
+                        throw new AlmException('500: Internal server error');
+                        break;
+                }
+            }
         } else {
-            AlmExceptionGenerator::throwCurlError(curl_error($this->curl));
+            throw new AlmCurlException('Curl error: ' . curl_error($this->curl));
         }
 
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getResult()
     {
         return $this->result;
     }
 
+    /**
+     * @return string|null
+     */
     public function getInfo()
     {
         return $this->info;
     }
 
+    /**
+     * @return string|null
+     */
     public function getHttpCode()
     {
         if (null !== $this->getInfo()) {
@@ -95,25 +149,37 @@ Class AlmCurl
         }
     }
 
+    /**
+     * @return $this
+     * @throws AlmCurlException
+     */
     public function createCookie()
     {
         $this->curlInit();
 
         if ($this->curl !== null) {
-            curl_setopt($this->curl, CURLOPT_COOKIEJAR, $this->cookieStorage->createCurlCookieFile());
+            curl_setopt($this->curl, CURLOPT_COOKIEJAR, $this->cookieStorage->createCurlCookieFile()->getCurlCookieFile());
         } else {
-            AlmExceptionGenerator::throwCurlNotInitialized();
+            throw new AlmCurlException('Curl not initialized');
         }
 
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     protected function clearResults()
     {
         $this->result = null;
         $this->info = null;
+
+        return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function close()
     {
         if ($this->curl !== null) {
@@ -121,10 +187,19 @@ Class AlmCurl
             $this->curl = null;
 
             $this->clearResults();
-        } else {
-            AlmExceptionGenerator::throwCurlNotInitialized();
         }
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isResponseValid()
+    {
+        if ($this->getHttpCode() == '200' || $this->getHttpCode() == '201') {
+            return true;
+        }
+        return false;
     }
 }

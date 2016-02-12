@@ -11,6 +11,7 @@
 <a href="logout.php">Logout</a>
 <a href="status.php">Connection status</a>
 <a href="query.php">Query</a>
+<a href="query_xml.php" target="_blank">XML Query</a>
 <?php
 $cookieStorage = new \StepanSib\AlmClient\AlmCurlCookieStorage();
 if ($cookieStorage->isCurlCookieFileExist()) {

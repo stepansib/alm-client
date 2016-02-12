@@ -28,16 +28,16 @@ class AlmQuery
     /** @var AlmRoutes */
     protected $routes;
 
-    /** @var AlmEntityExtractorInterface */
+    /** @var AlmEntityExtractor */
     protected $entityExtractor;
 
     /**
      * AlmQuery constructor.
      * @param AlmCurl $curl
      * @param AlmRoutes $routes
-     * @param AlmEntityExtractorInterface $entityExtractor
+     * @param AlmEntityExtractor $entityExtractor
      */
-    public function __construct(AlmCurl $curl, AlmRoutes $routes, AlmEntityExtractorInterface $entityExtractor)
+    public function __construct(AlmCurl $curl, AlmRoutes $routes, AlmEntityExtractor $entityExtractor)
     {
         $this->criterias = array();
         $this->curl = $curl;
@@ -68,19 +68,21 @@ class AlmQuery
 
     /**
      * @return array
-     * @throws AlmQueryException
      */
     public function execute()
     {
-        $resultArray = array();
+        return $this->extractToArray(simplexml_load_string($this->executeRaw()));
+    }
 
-        if ($queryUrl = $this->getQueryUrl()) {
-            if ($this->curl->exec($queryUrl)->getHttpCode() == '200') {
-                $resultArray = $this->extractToArray(simplexml_load_string($this->curl->getResult()));
-            }
-        }
-
-        return $resultArray;
+    /**
+     * @return mixed
+     * @throws AlmQueryException
+     * @throws Exception\AlmCurlException
+     * @throws Exception\AlmException
+     */
+    public function executeRaw()
+    {
+        return $this->curl->exec($this->getQueryUrl())->getResult();
     }
 
     /**

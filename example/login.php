@@ -12,4 +12,4 @@ require 'menu.php';
 use StepanSib\AlmClient\AlmClient;
 
 $almClient = new AlmClient($connectionParams);
-echo $almClient->getAuthenticator()->login() ? "Authenticated" : "Not authenticated";
+echo $almClient->getAuthenticator()->login()->isAuthenticated() ? "Authenticated" : "Not authenticated";

@@ -21,28 +21,37 @@ class AlmCurlCookieStorage
             $_SESSION[self::SESSION_COOKIE_FILE_KEY] = tempnam("/tmp", "ALMCOOKIE");
         }
 
-        return $_SESSION[self::SESSION_COOKIE_FILE_KEY];
+        return $this;
     }
 
+    /**
+     *
+     */
     public function deleteCurlCookieFile()
     {
         if ($this->isCurlCookieFileExist()) {
             unlink($_SESSION[self::SESSION_COOKIE_FILE_KEY]);
             unset($_SESSION[self::SESSION_COOKIE_FILE_KEY]);
-        } else {
-            AlmExceptionGenerator::throwCookieFileDoesNotExist();
         }
+
+        return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getCurlCookieFile()
     {
         if ($this->isCurlCookieFileExist()) {
             return $_SESSION[self::SESSION_COOKIE_FILE_KEY];
         } else {
-            AlmExceptionGenerator::throwCookieFileDoesNotExist();
+            return null;
         }
     }
 
+    /**
+     * @return bool
+     */
     public function isCurlCookieFileExist()
     {
         if (isset($_SESSION[self::SESSION_COOKIE_FILE_KEY])) {

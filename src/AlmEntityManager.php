@@ -17,25 +17,19 @@ class AlmEntityManager
     /** @var AlmRoutes */
     protected $routes;
 
-    /** @var AlmEntityExtractorInterface */
-    protected $entityEtractor;
+    /** @var AlmEntityExtractor */
+    protected $entityExtractor;
 
-    public function __construct(AlmCurl $curl, AlmRoutes $routes, AlmEntityExtractorInterface $fieldMapper)
+    public function __construct(AlmCurl $curl, AlmRoutes $routes, AlmEntityExtractor $entityExtractor)
     {
         $this->routes = $routes;
         $this->curl = $curl;
-        $this->setEntityExtractor($fieldMapper);
+        $this->entityExtractor = $entityExtractor;
     }
 
     public function createQuery()
     {
-        return new AlmQuery($this->curl, $this->routes, $this->entityEtractor);
-    }
-
-    public function setEntityExtractor(AlmEntityExtractorInterface $fieldMapper)
-    {
-        $this->entityEtractor = $fieldMapper;
-        return $this;
+        return new AlmQuery($this->curl, $this->routes, $this->entityExtractor);
     }
 
 }

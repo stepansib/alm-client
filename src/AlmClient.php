@@ -26,8 +26,8 @@ Class AlmClient
     /** @var  AlmEntityManager */
     protected $manager;
 
-    /** @var  AlmEntityExtractorInterface */
-    protected $entityEtractor;
+    /** @var  AlmEntityExtractor */
+    protected $entityExtractor;
 
     /**
      * AlmClient constructor.
@@ -35,7 +35,7 @@ Class AlmClient
      */
     public function __construct(array $connectionOptions)
     {
-        $this->entityEtractor = new AlmEntityExtractor(get_class(new AlmEntity()), array(
+        $this->entityExtractor = new AlmEntityExtractor(get_class(new AlmEntity()), array(
             'id' => 'id',
             'owner' => 'owner',
             'name' => 'name',
@@ -48,7 +48,7 @@ Class AlmClient
         $this->curl = new AlmCurl($this->cookieStorage);
         $this->routes = new AlmRoutes($connectionOptions['host'], $connectionOptions['domain'], $connectionOptions['project']);
         $this->authenticator = new AlmAuthenticator($connectionOptions['username'], $connectionOptions['password'], $this->curl, $this->cookieStorage, $this->routes);
-        $this->manager = new AlmEntityManager($this->curl, $this->routes, $this->entityEtractor);
+        $this->manager = new AlmEntityManager($this->curl, $this->routes, $this->entityExtractor);
     }
 
     /**
@@ -60,11 +60,11 @@ Class AlmClient
     }
 
     /**
-     * @return AlmEntityExtractor|AlmEntityExtractorInterface
+     * @return AlmEntityExtractor
      */
-    public function getEntityEtractor()
+    public function getEntityExtractor()
     {
-        return $this->entityEtractor;
+        return $this->entityExtractor;
     }
 
     /**

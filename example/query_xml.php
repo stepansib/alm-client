@@ -2,12 +2,11 @@
 /**
  * Created by PhpStorm.
  * User: Stepan
- * Date: 10.02.2016
- * Time: 22:23
+ * Date: 12.02.2016
+ * Time: 13:44
  */
 
 require 'config.php';
-require 'menu.php';
 
 use StepanSib\AlmClient\AlmClient;
 use StepanSib\AlmClient\AlmQuery;
@@ -23,4 +22,5 @@ $plainQuery = $query->select(AlmQuery::ENTITY_DEFECT)
     ->getQueryUrl();
 
 // Execute query and iterate result
-var_dump($query->execute());
+header("Content-type: text/xml");
+echo $query->executeRaw();

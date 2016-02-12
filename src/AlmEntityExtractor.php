@@ -8,7 +8,9 @@
 
 namespace StepanSib\AlmClient;
 
-class AlmEntityExtractor implements AlmEntityExtractorInterface
+use StepanSib\AlmClient\Exception\AlmEntityExtractorException;
+
+class AlmEntityExtractor
 {
 
     /** @var array */
@@ -17,6 +19,11 @@ class AlmEntityExtractor implements AlmEntityExtractorInterface
     /** @var  string */
     protected $className;
 
+    /**
+     * AlmEntityExtractor constructor.
+     * @param $entityClass
+     * @param array $fieldsMapping
+     */
     public function __construct($entityClass, array $fieldsMapping)
     {
         $this->fieldsMapping = $fieldsMapping;
@@ -25,30 +32,36 @@ class AlmEntityExtractor implements AlmEntityExtractorInterface
 
     public function pack()
     {
-        // TODO: Implement pack() method.
+
     }
 
     /**
      * @param \SimpleXMLElement $entityXml
      * @return AlmEntity
+     * @throws AlmEntityExtractorException
      */
     public function extract(\SimpleXMLElement $entityXml)
     {
-        $entity = new AlmEntity();
-
-        $entityXml = $entityXml->Fields[0];
-        foreach ($entityXml->Field as $field) {
-            foreach ($this->fieldsMapping as $xmlPropertyMapping => $entityPropertyMapping) {
-                if ($field->attributes()->Name == $xmlPropertyMapping) {
-                    $setter = 'set' . $entityPropertyMapping;
-                    if (method_exists($entity, $setter)) {
-                        $entity->$setter($field->Value[0]);
+        try {
+            $entity = new AlmEntity();
+            $entityXml = $entityXml->Fields[0];
+            foreach ($entityXml->Field as $field) {
+                foreach ($this->fieldsMapping as $xmlPropertyMapping => $entityPropertyMapping) {
+                    if ($field->attributes()->Name == $xmlPropertyMapping) {
+                        $setter = 'set' . $entityPropertyMapping;
+                        if (method_exists($entity, $setter)) {
+                            $entity->$setter($field->Value[0]);
+                        } else {
+                            throw new \Exception('Setter \'' . $setter . '\' not found in ' . get_class($entity));
+                        }
                     }
                 }
             }
+            return $entity;
+        } catch (\Exception $e) {
+            throw new AlmEntityExtractorException($e->getMessage());
         }
 
-        return $entity;
     }
 
 }
