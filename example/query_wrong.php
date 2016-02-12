@@ -11,7 +11,6 @@ require 'menu.php';
 
 use StepanSib\AlmClient\AlmClient;
 use StepanSib\AlmClient\AlmEntityManager;
-use StepanSib\AlmClient\AlmEntity;
 
 $almClient = new AlmClient($connectionParams);
 
