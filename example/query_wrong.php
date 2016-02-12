@@ -10,17 +10,15 @@ require 'config.php';
 require 'menu.php';
 
 use StepanSib\AlmClient\AlmClient;
-use StepanSib\AlmClient\AlmQuery;
+use StepanSib\AlmClient\AlmEntityManager;
 use StepanSib\AlmClient\AlmEntity;
 
 $almClient = new AlmClient($connectionParams);
-$query = $almClient->getManager()->createQuery();
 
-// Execute wrong query
-$defects = $query->select(AlmQuery::ENTITY_DEFECT)
-    ->where('id', '=5000000')
-    ->where('status', 'Open')
-    ->where('owner', 'syudin')
-    ->executeRaw();
+$defectsRawResponse = $almClient->getManager()->getBy(AlmEntityManager::ENTITY_TYPE_DEFECT, array(
+    '' => '>=50000',
+    'status' => 'Open',
+    'owner' => 'syudin',
+), AlmEntityManager::HYDRATION_NONE);
 
-var_dump($defects);
+echo $defectsRawResponse;

@@ -26,7 +26,7 @@ Class AlmClient
     /** @var  AlmEntityManager */
     protected $manager;
 
-    /** @var  AlmEntityExtractor */
+    /** @var  AlmEntityMapper */
     protected $entityExtractor;
 
     /**
@@ -35,7 +35,7 @@ Class AlmClient
      */
     public function __construct(array $connectionOptions)
     {
-        $this->entityExtractor = new AlmEntityExtractor(get_class(new AlmEntity()), array(
+        $this->entityExtractor = new AlmEntityMapper('StepanSib\AlmClient\AlmEntity', array(
             'id' => 'id',
             'owner' => 'owner',
             'name' => 'name',
@@ -61,7 +61,7 @@ Class AlmClient
     }
 
     /**
-     * @return AlmEntityExtractor
+     * @return AlmEntityMapper
      */
     public function getEntityExtractor()
     {

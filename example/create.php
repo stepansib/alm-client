@@ -25,4 +25,4 @@ $entity->setPriority('5-Urgent');
 $entity->setStatus('New');
 
 header("Content-type: text/xml");
-$almClient->getManager()->create($entity);
+$almClient->getManager()->save($entity);

@@ -9,18 +9,15 @@
 require 'config.php';
 
 use StepanSib\AlmClient\AlmClient;
-use StepanSib\AlmClient\AlmQuery;
+use StepanSib\AlmClient\AlmEntityManager;
 
 $almClient = new AlmClient($connectionParams);
-$query = $almClient->getManager()->createQuery();
 
-// Create query and get result URL
-$plainQuery = $query->select(AlmQuery::ENTITY_DEFECT)
-    ->where('id', '>=5000')
-    ->where('status', 'Open')
-    ->where('owner', 'syudin')
-    ->getQueryUrl();
+$defectsRawResponse = $almClient->getManager()->getBy(AlmEntityManager::ENTITY_TYPE_DEFECT, array(
+    'id' => '>=5000',
+    'status' => 'Open',
+    'owner' => 'syudin',
+), AlmEntityManager::HYDRATION_NONE);
 
-// Execute query and iterate result
 header("Content-type: text/xml");
-echo $query->executeRaw();
+echo $defectsRawResponse;

@@ -38,6 +38,14 @@ class AlmEntity implements AlmEntityInterface
     /** @var  string */
     protected $priority;
 
+    public function isNew()
+    {
+        if (null === $this->getId()) {
+            return true;
+        }
+        return false;
+    }
+
     public function setType($type)
     {
         $this->type = $type;

@@ -10,21 +10,16 @@ require 'config.php';
 require 'menu.php';
 
 use StepanSib\AlmClient\AlmClient;
-use StepanSib\AlmClient\AlmQuery;
 use StepanSib\AlmClient\AlmEntity;
+use StepanSib\AlmClient\AlmEntityManager;
 
 $almClient = new AlmClient($connectionParams);
-$query = $almClient->getManager()->createQuery();
 
-// Create query and get result URL
-$plainQuery = $query->select(AlmQuery::ENTITY_DEFECT)
-    ->where('id', '>=5000')
-    ->where('status', 'Open')
-    ->where('owner', 'syudin')
-    ->getQueryUrl();
-
-// Execute query and iterate result
-$defects = $query->execute();
+$defects = $almClient->getManager()->getBy(AlmEntityManager::ENTITY_TYPE_DEFECT, array(
+    'id' => '>=5000',
+    'status' => 'Open',
+    'owner' => 'syudin',
+));
 
 /** @var AlmEntity $defect */
 foreach ($defects as $defect) {

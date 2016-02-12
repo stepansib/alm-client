@@ -20,4 +20,6 @@ interface AlmEntityInterface
 
     public function getId();
 
+    public function isNew();
+
 }

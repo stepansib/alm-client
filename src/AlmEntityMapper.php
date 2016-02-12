@@ -11,7 +11,7 @@ namespace StepanSib\AlmClient;
 use StepanSib\AlmClient\Exception\AlmEntityExtractorException;
 use StepanSib\AlmClient\AlmEntityInterface;
 
-class AlmEntityExtractor
+class AlmEntityMapper
 {
 
     /** @var array */
@@ -41,7 +41,6 @@ class AlmEntityExtractor
 
     public function pack(AlmEntityInterface $entity)
     {
-        //$xml = new \SimpleXMLElement('Entity');
         $xml = new \SimpleXMLElement('<Entity></Entity>');
         $xml->addAttribute('Type', $entity->getType());
         $xmlFields = $xml->addChild('Fields');
