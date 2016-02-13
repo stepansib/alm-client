@@ -13,6 +13,8 @@
 <a href="query.php">Query</a>
 <a href="query_xml.php" target="_blank">XML Query</a>
 <a href="query_wrong.php">Wrong query</a>
+<a href="create.php">Create defect</a>
+<a href="req_fields.php">Defect required fields</a>
 <?php
 $cookieStorage = new \StepanSib\AlmClient\AlmCurlCookieStorage();
 if ($cookieStorage->isCurlCookieFileExist()) {

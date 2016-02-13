@@ -44,6 +44,40 @@ class AlmEntityManager
 
     /**
      * @param $entityType
+     * @return array
+     * @throws AlmEntityManagerException
+     * @throws Exception\AlmCurlException
+     * @throws Exception\AlmException
+     */
+    public function getEntityRequiredFields($entityType)
+    {
+        $fields = array();
+
+        $this->curl->exec($this->routes->getEntityDefaultFieldsUrl($entityType));
+
+        $xml = simplexml_load_string($this->curl->getResult());
+        if (false === $xml) {
+            throw new AlmEntityManagerException('Cannot get entity required fields, server returned incorrect XML');
+        }
+
+        /** @var \SimpleXMLElement $field */
+        foreach ($xml as $field) {
+            $fieldData = array();
+
+            $fieldData['label'] = (string)$field->attributes()->Label;
+
+            if (property_exists($field, 'List-Id')) {
+                $fieldData['list_id'] = (string)$field->{'List-Id'};
+            }
+
+            $fields[(string)$field->attributes()->Name] = $fieldData;
+        }
+
+        return $fields;
+    }
+
+    /**
+     * @param $entityType
      * @return string
      */
     protected function pluralizeEntityType($entityType)
@@ -72,7 +106,7 @@ class AlmEntityManager
             array_push($criteriaProcessed, $key . '[' . $value . ']');
         }
 
-        $url = $this->routes->getEntityUrl() . '/' . $this->pluralizeEntityType($entityType) . '?query={' . implode(';', $criteriaProcessed) . '}';
+        $url = $this->routes->getEntityUrl($this->pluralizeEntityType($entityType)) . '?query={' . implode(';', $criteriaProcessed) . '}';
         $resultRaw = $this->curl->exec($url)->getResult();
 
         switch ($hydration) {

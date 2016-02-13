@@ -39,9 +39,14 @@ class AlmRoutes
         return $this->host . '/qcbin/rest/is-authenticated';
     }
 
-    public function getEntityUrl()
+    public function getEntityUrl($entityType)
     {
-        return $this->host . '/qcbin/rest/domains/' . $this->domain . '/projects/' . $this->project;
+        return $this->host . '/qcbin/rest/domains/' . $this->domain . '/projects/' . $this->project . '/' . $entityType;
+    }
+
+    public function getEntityDefaultFieldsUrl($entityType)
+    {
+        return $this->host . '/qcbin/rest/domains/' . $this->domain . '/projects/'.$this->project.'/customization/entities/' . $entityType . '/fields?required=true';
     }
 
 }
