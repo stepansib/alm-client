@@ -44,6 +44,15 @@ class AlmEntityManager
 
     /**
      * @param $entityType
+     * @return string
+     */
+    protected function pluralizeEntityType($entityType)
+    {
+        return $entityType . 's';
+    }
+
+    /**
+     * @param $entityType
      * @param array $criteria
      * @param string $hydration
      * @return AlmEntityInterface[]|string
@@ -63,7 +72,7 @@ class AlmEntityManager
             array_push($criteriaProcessed, $key . '[' . $value . ']');
         }
 
-        $url = $this->routes->getEntityUrl() . '/' . $entityType . 's?query={' . implode(';', $criteriaProcessed) . '}';
+        $url = $this->routes->getEntityUrl() . '/' . $this->pluralizeEntityType($entityType) . '?query={' . implode(';', $criteriaProcessed) . '}';
         $resultRaw = $this->curl->exec($url)->getResult();
 
         switch ($hydration) {

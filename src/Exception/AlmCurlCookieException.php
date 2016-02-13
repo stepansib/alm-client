@@ -8,7 +8,7 @@
 
 namespace StepanSib\AlmClient\Exception;
 
-class AlmCurlCookieException extends AlmException
+class AlmCurlCookieException extends \Exception
 {
 
     public function setMessage($message)

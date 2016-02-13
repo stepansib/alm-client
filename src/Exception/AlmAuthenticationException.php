@@ -8,7 +8,7 @@
 
 namespace StepanSib\AlmClient\Exception;
 
-class AlmAuthenticationException extends AlmException
+class AlmAuthenticationException extends \Exception
 {
 
     public function setMessage($message)

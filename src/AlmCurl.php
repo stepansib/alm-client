@@ -9,6 +9,7 @@
 namespace StepanSib\AlmClient;
 
 use StepanSib\AlmClient\Exception\AlmCurlException;
+use StepanSib\AlmClient\Exception\AlmException;
 
 Class AlmCurl
 {
@@ -19,7 +20,6 @@ Class AlmCurl
     const HTTP_405 = '405: method not supported by resource';
     const HTTP_406 = '406: unsupported ACCEPT type';
     const HTTP_415 = '415: unsupported request content type';
-    const HTTP_500 = '500: Internal server error';
 
     /** @var resource */
     protected $curl;
@@ -79,6 +79,7 @@ Class AlmCurl
      * @param $url
      * @return $this
      * @throws AlmCurlException
+     * @throws AlmException
      */
     public function exec($url)
     {
@@ -94,17 +95,33 @@ Class AlmCurl
             $this->info = curl_getinfo($this->curl);
 
             if (!$this->isResponseValid()) {
+
+                if ($this->getHttpCode() == '500') {
+                    $error = $this->getInternalError();
+                    throw new AlmException($error);
+                }
+
                 $httpCodeConstantName = get_class($this) . '::HTTP_' . $this->getHttpCode();
                 if (defined($httpCodeConstantName)) {
                     throw new AlmCurlException(constant($httpCodeConstantName));
                 }
                 throw new AlmCurlException('Disallowed HTTP response code: ' . $this->getHttpCode());
+
             }
         } else {
             throw new AlmCurlException('Curl error: ' . curl_error($this->curl));
         }
 
         return $this;
+    }
+
+    protected function getInternalError()
+    {
+        $xml = simplexml_load_string($this->getResult());
+        if (false === $xml || !property_exists($xml, 'Title')) {
+            return "Undefined error";
+        }
+        return $xml->Title[0];
     }
 
     /**

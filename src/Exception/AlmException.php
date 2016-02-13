@@ -10,6 +10,5 @@ namespace StepanSib\AlmClient\Exception;
 
 class AlmException extends \Exception
 {
-
-
+    
 }

@@ -8,7 +8,7 @@
 
 namespace StepanSib\AlmClient\Exception;
 
-class AlmQueryException extends AlmException
+class AlmQueryException extends \Exception
 {
 
     public function setMessage($message)

@@ -8,7 +8,7 @@
 
 namespace StepanSib\AlmClient\Exception;
 
-class AlmEntityManagerException extends AlmException
+class AlmEntityManagerException extends \Exception
 {
 
     public function setMessage($message)
