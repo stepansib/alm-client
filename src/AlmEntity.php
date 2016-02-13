@@ -33,6 +33,9 @@ class AlmEntity implements AlmEntityInterface
     protected $owner;
 
     /** @var  string */
+    protected $detectedBy;
+
+    /** @var  string */
     protected $status;
 
     /** @var  string */
@@ -124,6 +127,16 @@ class AlmEntity implements AlmEntityInterface
     public function getPriority()
     {
         return $this->priority;
+    }
+
+    public function setDetectedBy($detectedBy)
+    {
+        $this->detectedBy = $detectedBy;
+    }
+
+    public function getDetectedBy()
+    {
+        return $this->detectedBy;
     }
 
 }

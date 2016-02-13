@@ -8,6 +8,8 @@
 
 namespace StepanSib\AlmClient;
 
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
 Class AlmClient
 {
 
@@ -35,8 +37,14 @@ Class AlmClient
      */
     public function __construct(array $connectionOptions)
     {
+
+        $resolver = new OptionsResolver();
+        $this->configureOptions($resolver);
+        $resolver->resolve($connectionOptions);
+
         $this->entityExtractor = new AlmEntityMapper('StepanSib\AlmClient\AlmEntity', array(
             'id' => 'id',
+            'user-05' => 'detectedBy',
             'owner' => 'owner',
             'name' => 'name',
             'description' => 'description',
@@ -50,6 +58,23 @@ Class AlmClient
         $this->routes = new AlmRoutes($connectionOptions['host'], $connectionOptions['domain'], $connectionOptions['project']);
         $this->authenticator = new AlmAuthenticator($connectionOptions['username'], $connectionOptions['password'], $this->curl, $this->cookieStorage, $this->routes);
         $this->manager = new AlmEntityManager($this->curl, $this->routes, $this->entityExtractor);
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'host' => 'http://your.alm.server.com:8080',
+            'domain' => 'your_domain',
+            'project' => 'your_project_name',
+            'username' => 'your_user_name',
+            'password' => 'your_password',
+        ))->setRequired(array(
+            'host',
+            'domain',
+            'project',
+            'username',
+            'password',
+        ));
     }
 
     /**
