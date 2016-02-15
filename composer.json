@@ -1,6 +1,6 @@
 {
     "name": "stepansib/alm-client",
-    "description": "HP ALM REST Client for PHP",
+    "description": "HP ALM/QC REST Client for PHP",
     "license": "MIT",
     "authors": [
         {
