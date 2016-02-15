@@ -60,7 +60,6 @@ class AlmAuthenticator
             $headers = array("GET /HTTP/1.1", "Authorization: Basic " . base64_encode($this->userName . ":" . $this->password));
 
             $isValid = $this->curl->createCookie()->setHeaders($headers)->exec($this->routes->getLoginUrl())->isResponseValid();
-            $this->curl->close();
 
             if (!$isValid) {
                 $this->cookieStorage->deleteCurlCookieFile();
@@ -98,7 +97,6 @@ class AlmAuthenticator
     {
         try {
             $this->curl->exec($this->routes->getLogoutUrl());
-            $this->curl->close();
             $this->cookieStorage->deleteCurlCookieFile();
         } catch (\Exception $e) {
             throw new AlmAuthenticationException('Authentication error : ' . $e->getMessage());

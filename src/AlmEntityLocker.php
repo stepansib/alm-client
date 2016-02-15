@@ -1,0 +1,91 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Stepan
+ * Date: 15.02.2016
+ * Time: 14:48
+ */
+
+namespace StepanSib\AlmClient;
+
+class AlmEntityLocker
+{
+
+    /** @var AlmCurl */
+    protected $curl;
+
+    /** @var AlmRoutes */
+    protected $routes;
+
+    /**
+     * AlmEntityLocker constructor.
+     * @param AlmCurl $curl
+     * @param AlmRoutes $routes
+     */
+    public function __construct(AlmCurl $curl, AlmRoutes $routes)
+    {
+        $this->curl = $curl;
+        $this->routes = $routes;
+    }
+
+    /**
+     * @param $entity AlmEntity
+     * @throws Exception\AlmCurlException
+     * @throws Exception\AlmException
+     */
+    public function lockEntity(AlmEntity $entity)
+    {
+        $this->curl->setHeaders(array('POST /HTTP/1.1'))
+            ->setPost()
+            ->exec($this->routes->getEntityLockUrl($entity->getTypePluralized(), $entity->id));
+    }
+
+    /**
+     * @param $entity
+     * @throws Exception\AlmCurlException
+     * @throws Exception\AlmException
+     */
+    public function unlockEntity(AlmEntity $entity)
+    {
+        $this->curl->setHeaders(array('DELETE /HTTP/1.1'))
+            ->setDelete()
+            ->exec($this->routes->getEntityLockUrl($entity->getTypePluralized(), $entity->id));
+    }
+
+    /**
+     * @param AlmEntity $entity
+     * @return string
+     * @throws Exception\AlmCurlException
+     * @throws Exception\AlmException
+     */
+    public function getEntityLockStatus(AlmEntity $entity)
+    {
+        $this->curl->exec($this->routes->getEntityLockUrl($entity->getTypePluralized(), $entity->id));
+        $xml = simplexml_load_string($this->curl->getResult());
+        return (string)$xml->LockStatus[0];
+    }
+
+    /**
+     * @param AlmEntity $entity
+     * @throws Exception\AlmCurlException
+     * @throws Exception\AlmException
+     */
+    public function checkOutEntity(AlmEntity $entity)
+    {
+        $this->curl->setHeaders(array('POST /HTTP/1.1'))
+            ->setPost()
+            ->exec($this->routes->getEntityCheckoutUrl($entity->getTypePluralized(), $entity->id));
+    }
+
+    /**
+     * @param AlmEntity $entity
+     * @throws Exception\AlmCurlException
+     * @throws Exception\AlmException
+     */
+    public function checkInEntity(AlmEntity $entity)
+    {
+        $this->curl->setHeaders(array('POST /HTTP/1.1'))
+            ->setPost()
+            ->exec($this->routes->getEntityCheckinUrl($entity->getTypePluralized(), $entity->id));
+    }
+}

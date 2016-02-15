@@ -15,21 +15,23 @@ use StepanSib\AlmClient\AlmEntityManager;
 
 $almClient = new AlmClient($connectionParams);
 
-$defects = $almClient->getManager()->getBy(AlmEntityManager::ENTITY_TYPE_DEFECT, array(
-    'id' => '>=5000',
-    'status' => 'Open',
-    'owner' => 'syudin',
+$defects = $almClient->getManager()->getBy(AlmEntity::ENTITY_TYPE_DEFECT, array(
+    'id' => '='.$defectId,
+    //'status' => 'Open',
+    //'owner' => 'syudin',
 ));
 
-/** @var AlmEntity $defect */
 foreach ($defects as $defect) {
-    echo 'Type: ' . $defect->getType() . '<br/>';
-    echo 'Id: ' . $defect->getId() . '<br/>';
-    echo 'Status: ' . $defect->getStatus() . '<br/>';
-    echo 'Owner: ' . $defect->getOwner() . '<br/>';
-    echo 'Priority: ' . $defect->getPriority() . '<br/>';
-    echo 'Name: ' . $defect->getName() . '<br/>';
-    echo 'Description: ' . $defect->getDescription() . '<br/>';
-    echo 'Comments: ' . $defect->getComments() . '<br/>';
+
+    // You can access entity field by getParameter method
+    echo $defect->getParameter('id') . '<br/>';
+
+    // or by magic method
+    echo $defect->status . '<hr/>';
+
+    // or simply iterate through all of the fields
+    foreach ($defect->getParameters() as $field => $value) {
+        echo $field . ': ' . $value . '<br/>';
+    }
     echo '<hr/>';
 }

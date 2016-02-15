@@ -13,6 +13,14 @@ class AlmCurlCookieStorage
 
     const SESSION_COOKIE_FILE_KEY = "alm_cookie_file";
 
+    public function __construct()
+    {
+        if (!session_id()) {
+            // TODO: Replace with corect Exception
+            throw new \Exception('Session is not started');
+        }
+    }
+
     public function createCurlCookieFile()
     {
         if (!$this->isCurlCookieFileExist()) {

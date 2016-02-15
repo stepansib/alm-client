@@ -7,18 +7,27 @@
  */
 ?>
 
-<a href="login.php">Login</a>
-<a href="logout.php">Logout</a>
-<a href="status.php">Connection status</a>
-<a href="query.php">Query</a>
-<a href="query_xml.php" target="_blank">XML Query</a>
-<a href="query_wrong.php">Wrong query</a>
-<a href="create.php">Create defect</a>
-<a href="req_fields.php">Defect required fields</a>
+<a style='margin-right: 15px;' href="login.php">Login</a>
+<a style='margin-right: 15px;' href="logout.php">Logout</a>
+<a style='margin-right: 15px;' href="status.php">Connection status</a>
+<a style='margin-right: 15px;' href="query.php">Query</a>
+<a style='margin-right: 15px;' href="query_xml.php" target="_blank">XML Query</a>
+<a style='margin-right: 15px;' href="query_wrong.php">Wrong query</a>
+<a style='margin-right: 15px;' href="fields.php">Defect fields</a>
+<a style='margin-right: 15px;' href="fields_full_xml.php" target="_blank">XML Defect fields</a>
+<a style='margin-right: 15px;' href="req_fields.php">Defect required fields</a>
+<a style='margin-right: 15px;' href="fields_editable.php">Defect editable fields</a>
+<a style='margin-right: 15px;' href="lists.php" target="_blank">XML Lists</a>
+<a style='margin-right: 15px;' href="create.php">Create defect</a>
+<a style='margin-right: 15px;' href="lock_status.php">Defect lock status</a>
+<a style='margin-right: 15px;' href="update.php">Update defect</a>
+
 <?php
+
+// You can get cookie storage file path
 $cookieStorage = new \StepanSib\AlmClient\AlmCurlCookieStorage();
 if ($cookieStorage->isCurlCookieFileExist()) {
-    echo $cookieStorage->getCurlCookieFile();
+    $cookieStorageFile = $cookieStorage->getCurlCookieFile();
 }
 ?>
 <hr>

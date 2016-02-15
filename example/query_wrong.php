@@ -10,11 +10,12 @@ require 'config.php';
 require 'menu.php';
 
 use StepanSib\AlmClient\AlmClient;
+use StepanSib\AlmClient\AlmEntity;
 use StepanSib\AlmClient\AlmEntityManager;
 
 $almClient = new AlmClient($connectionParams);
 
-$defectsRawResponse = $almClient->getManager()->getBy(AlmEntityManager::ENTITY_TYPE_DEFECT, array(
+$defectsRawResponse = $almClient->getManager()->getBy(AlmEntity::ENTITY_TYPE_DEFECT, array(
     '' => '>=50000',
     'status' => 'Open',
     'owner' => 'syudin',

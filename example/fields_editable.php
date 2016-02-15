@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: Stepan
- * Date: 13.02.2016
- * Time: 16:50
+ * Date: 15.02.2016
+ * Time: 13:21
  */
 
 require 'config.php';
@@ -15,12 +15,12 @@ use StepanSib\AlmClient\AlmEntityManager;
 
 $almClient = new AlmClient($connectionParams);
 
-$defectRequiredFields = $almClient->getManager()->getParametersManager()->getEntityTypeFields(AlmEntity::ENTITY_TYPE_DEFECT, true);
+$defectEditableFields = $almClient->getManager()->getEntityEditableParameters(AlmEntity::ENTITY_TYPE_DEFECT);
 
 ?>
     <pre>
     <?
-    echo var_export($defectRequiredFields, true);
+    echo var_export($defectEditableFields, true);
     ?>
     </pre>
 <?

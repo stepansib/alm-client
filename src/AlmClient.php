@@ -28,9 +28,6 @@ Class AlmClient
     /** @var  AlmEntityManager */
     protected $manager;
 
-    /** @var  AlmEntityMapper */
-    protected $entityExtractor;
-
     /**
      * AlmClient constructor.
      * @param array $connectionOptions
@@ -42,33 +39,19 @@ Class AlmClient
         $this->configureOptions($resolver);
         $resolver->resolve($connectionOptions);
 
-        $this->entityExtractor = new AlmEntityMapper('StepanSib\AlmClient\AlmEntity', array(
-            'id' => 'id',
-            'user-05' => 'detectedBy',
-            'owner' => 'owner',
-            'name' => 'name',
-            'description' => 'description',
-            'dev-comments' => 'comments',
-            'priority' => 'priority',
-            'status' => 'status',
-        ));
-
         $this->cookieStorage = new AlmCurlCookieStorage();
         $this->curl = new AlmCurl($this->cookieStorage);
         $this->routes = new AlmRoutes($connectionOptions['host'], $connectionOptions['domain'], $connectionOptions['project']);
         $this->authenticator = new AlmAuthenticator($connectionOptions['username'], $connectionOptions['password'], $this->curl, $this->cookieStorage, $this->routes);
-        $this->manager = new AlmEntityManager($this->curl, $this->routes, $this->entityExtractor);
+        $this->manager = new AlmEntityManager($this->curl, $this->routes);
     }
 
+    /**
+     * @param OptionsResolver $resolver
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'host' => 'http://your.alm.server.com:8080',
-            'domain' => 'your_domain',
-            'project' => 'your_project_name',
-            'username' => 'your_user_name',
-            'password' => 'your_password',
-        ))->setRequired(array(
+        $resolver->setRequired(array(
             'host',
             'domain',
             'project',
@@ -83,14 +66,6 @@ Class AlmClient
     public function getAuthenticator()
     {
         return $this->authenticator;
-    }
-
-    /**
-     * @return AlmEntityMapper
-     */
-    public function getEntityExtractor()
-    {
-        return $this->entityExtractor;
     }
 
     /**

@@ -1,57 +1,38 @@
 <?php
-
 /**
  * Created by PhpStorm.
  * User: Stepan
- * Date: 09.02.2016
- * Time: 15:42
+ * Date: 14.02.2016
+ * Time: 21:34
  */
 
 namespace StepanSib\AlmClient;
 
-use StepanSib\AlmClient\AlmEntityInterface;
+use StepanSib\AlmClient\Exception\AlmEntityException;
 
-class AlmEntity implements AlmEntityInterface
+class AlmEntity
 {
 
-    /** @var  string */
+    const ENTITY_TYPE_TEST = 'test';
+    const ENTITY_TYPE_DEFECT = 'defect';
+
+    protected $parameters;
+
+    protected $parametersChanged;
+
     protected $type;
 
-    /** @var integer */
-    protected $id;
-
-    /** @var  string */
-    protected $name;
-
-    /** @var  string */
-    protected $description;
-
-    /** @var  string */
-    protected $comments;
-
-    /** @var  string */
-    protected $owner;
-
-    /** @var  string */
-    protected $detectedBy;
-
-    /** @var  string */
-    protected $status;
-
-    /** @var  string */
-    protected $priority;
-
-    public function isNew()
+    public function __construct($type)
     {
-        if (null === $this->getId()) {
-            return true;
-        }
-        return false;
+        $this->parameters = array();
+        $this->parametersChanged = array();
+        $this->setType($type);
     }
 
     public function setType($type)
     {
         $this->type = $type;
+        return $this;
     }
 
     public function getType()
@@ -59,84 +40,78 @@ class AlmEntity implements AlmEntityInterface
         return $this->type;
     }
 
-    public function setId($id)
+    public function getTypePluralized()
     {
-        $this->id = $id;
+        return $this->getType().'s';
     }
 
-    public function getId()
+    protected function getParameterKey($parameterName)
     {
-        return $this->id;
+        $parameters = $this->getParameters();
+
+        if (isset($parameters[$parameterName])) {
+            return $parameterName;
+        }
+
+        foreach ($parameters as $field => $value) {
+            if (mb_strtolower($parameterName, 'utf-8') == mb_strtolower($field, 'utf-8')) {
+                return $field;
+            }
+        }
+
     }
 
-    public function setName($name)
+    public function setParameter($parameterName, $value, $paramChanged = true)
     {
-        $this->name = $name;
+        $parameterOriginalName = $this->getParameterKey($parameterName);
+
+        if (null !== $parameterOriginalName) {
+            $parameterName = $parameterOriginalName;
+        }
+
+        $this->parameters[$parameterName] = $value;
+        if ($paramChanged) {
+            $this->parametersChanged[$parameterName] = $value;
+        }
+        return $this;
     }
 
-    public function getName()
+    public function getParameter($parameterName)
     {
-        return $this->name;
+        $parameterOriginalName = $this->getParameterKey($parameterName);
+
+        if (null === $parameterOriginalName) {
+            throw new AlmEntityException('Field name "' . $parameterName . '" not found');
+        }
+
+        return $this->parameters[$parameterOriginalName];
     }
 
-    public function setDescription($description)
+    public function getParameters()
     {
-        $this->description = $description;
+        return $this->parameters;
     }
 
-    public function getDescription()
+    public function getParametersChanged()
     {
-        return $this->description;
+        return $this->parametersChanged;
     }
 
-    public function setComments($comments)
+    public function isNew()
     {
-        $this->comments = $comments;
+        if (isset($this->parameters['id'])) {
+            return false;
+        }
+        return true;
     }
 
-    public function getComments()
+    /**
+     * @param $parameterName
+     * @return mixed
+     */
+    public function __get($parameterName)
     {
-        return $this->comments;
-    }
-
-    public function setOwner($owner)
-    {
-        $this->owner = $owner;
-    }
-
-    public function getOwner()
-    {
-        return $this->owner;
-    }
-
-    public function setStatus($status)
-    {
-        $this->status = $status;
-    }
-
-    public function getStatus()
-    {
-        return $this->owner;
-    }
-
-    public function setPriority($priority)
-    {
-        $this->priority = $priority;
-    }
-
-    public function getPriority()
-    {
-        return $this->priority;
-    }
-
-    public function setDetectedBy($detectedBy)
-    {
-        $this->detectedBy = $detectedBy;
-    }
-
-    public function getDetectedBy()
-    {
-        return $this->detectedBy;
+        return $this->getParameter($parameterName);
     }
 
 }

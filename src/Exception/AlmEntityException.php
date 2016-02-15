@@ -2,18 +2,18 @@
 /**
  * Created by PhpStorm.
  * User: Stepan
- * Date: 12.02.2016
- * Time: 15:31
+ * Date: 14.02.2016
+ * Time: 22:16
  */
 
 namespace StepanSib\AlmClient\Exception;
 
-class AlmCurlCookieException extends \Exception
+class AlmEntityException extends \Exception
 {
 
     public function setMessage($message)
     {
-        $this->message = 'Curl cookie storage error: ' . $message;
+        $this->message = 'ALM entity error: ' . $message;
     }
 
 }

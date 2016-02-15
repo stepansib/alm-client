@@ -68,12 +68,47 @@ Class AlmCurl
 
         if (count($headers) > 0) {
             curl_setopt($this->curl, CURLOPT_HTTPHEADER, $headers);
-            return $this;
         }
 
-        curl_setopt($this->curl, CURLOPT_HTTPHEADER, array());
         return $this;
     }
+
+    public function setPost($body = null)
+    {
+        $this->curlInit();
+
+        curl_setopt($this->curl, CURLOPT_POST, 1);
+        if (null !== $body) {
+            curl_setopt($this->curl, CURLOPT_POSTFIELDS, $body);
+        }
+
+        return $this;
+    }
+
+    public function setPut($body = null)
+    {
+        $this->curlInit();
+
+        curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, "PUT");
+        if (null !== $body) {
+            curl_setopt($this->curl, CURLOPT_POSTFIELDS, $body);
+        }
+
+        return $this;
+    }
+
+    public function setDelete($body = null)
+    {
+        $this->curlInit();
+
+        curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+        if (null !== $body) {
+            curl_setopt($this->curl, CURLOPT_POSTFIELDS, $body);
+        }
+
+        return $this;
+    }
+
 
     /**
      * @param $url
@@ -83,6 +118,7 @@ Class AlmCurl
      */
     public function exec($url)
     {
+
         $this->curlInit();
 
         curl_setopt($this->curl, CURLOPT_URL, $url);
@@ -105,6 +141,7 @@ Class AlmCurl
                 if (defined($httpCodeConstantName)) {
                     throw new AlmCurlException(constant($httpCodeConstantName));
                 }
+
                 throw new AlmCurlException('Disallowed HTTP response code: ' . $this->getHttpCode());
 
             }
@@ -112,6 +149,7 @@ Class AlmCurl
             throw new AlmCurlException('Curl error: ' . curl_error($this->curl));
         }
 
+        $this->close();
         return $this;
     }
 
@@ -184,13 +222,11 @@ Class AlmCurl
     /**
      * @return $this
      */
-    public function close()
+    protected function close()
     {
         if ($this->curl !== null) {
             curl_close($this->curl);
             $this->curl = null;
-
-            $this->clearResults();
         }
 
         return $this;

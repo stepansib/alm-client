@@ -7,22 +7,24 @@
  */
 
 require 'config.php';
-//require 'menu.php';
+require 'menu.php';
+//require 'header_xml.php';
 
 use StepanSib\AlmClient\AlmClient;
-use StepanSib\AlmClient\AlmQuery;
 use StepanSib\AlmClient\AlmEntity;
+use StepanSib\AlmClient\AlmEntityManager;
 
 $almClient = new AlmClient($connectionParams);
 
-$entity = new AlmEntity();
-$entity->setType(AlmQuery::ENTITY_DEFECT);
-$entity->setOwner('syudin');
-$entity->setName(date('d/m/Y H:i:s') . ': test defect by REST API client');
-$entity->setDescription('A very long test description');
-$entity->setComments('');
-$entity->setPriority('5-Urgent');
-$entity->setStatus('New');
+$entity = new AlmEntity(AlmEntity::ENTITY_TYPE_DEFECT);
+$entity->setParameter('name', 'REST API test defect ' . date('d/m/Y H:i:s'))
+    ->setParameter('detected-by', $connectionParams['username'])
+    ->setParameter('owner', 'akorchagin')
+    ->setParameter('creation-time', date('Y-m-d'))
+    ->setParameter('user-05', 'Не определен')
+    ->setParameter('description', 'REST API test defect description');
 
-header("Content-type: text/xml");
-$almClient->getManager()->save($entity);
+echo 'Entity created successfully<br/>';
+
+$entity = $almClient->getManager()->save($entity);
+echo 'Save entity id: ' . $entity->id . '<br/>';
