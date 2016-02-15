@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: Stepan
- * Date: 12.02.2016
- * Time: 13:44
+ * Date: 15.02.2016
+ * Time: 12:29
  */
 
 require 'config.php';
@@ -15,11 +15,4 @@ use StepanSib\AlmClient\AlmEntity;
 use StepanSib\AlmClient\AlmEntityManager;
 
 $almClient = new AlmClient($connectionParams);
-
-$defectsRawResponse = $almClient->getManager()->getBy(AlmEntity::ENTITY_TYPE_DEFECT, array(
-    'id' => '='.$defectId,
-    'status' => 'Open',
-    'owner' => 'syudin',
-), AlmEntityManager::HYDRATION_NONE);
-
-echo $defectsRawResponse;
+echo $almClient->getManager()->getParametersManager()->getEntityTypeFields(AlmEntity::ENTITY_TYPE_DEFECT, false, true);

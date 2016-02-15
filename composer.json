@@ -12,5 +12,8 @@
         "psr-4": {
             "StepanSib\\AlmClient\\": "src\\"
         }
+    },
+    "require": {
+        "symfony/options-resolver": "^3.0"
     }
 }

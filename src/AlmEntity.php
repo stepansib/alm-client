@@ -1,106 +1,117 @@
 <?php
-
 /**
  * Created by PhpStorm.
  * User: Stepan
- * Date: 09.02.2016
- * Time: 15:42
+ * Date: 14.02.2016
+ * Time: 21:34
  */
 
 namespace StepanSib\AlmClient;
 
+use StepanSib\AlmClient\Exception\AlmEntityException;
+
 class AlmEntity
 {
 
-    /** @var integer */
-    protected $id;
+    const ENTITY_TYPE_TEST = 'test';
+    const ENTITY_TYPE_DEFECT = 'defect';
 
-    /** @var  string */
-    protected $name;
+    protected $parameters;
 
-    /** @var  string */
-    protected $description;
+    protected $parametersChanged;
 
-    /** @var  string */
-    protected $comments;
+    protected $type;
 
-    /** @var  string */
-    protected $owner;
-
-    /** @var  string */
-    protected $status;
-
-    /** @var  string */
-    protected $priority;
-
-    public function setId($id)
+    public function __construct($type)
     {
-        $this->id = $id;
+        $this->parameters = array();
+        $this->parametersChanged = array();
+        $this->setType($type);
     }
 
-    public function getId()
+    public function setType($type)
     {
-        return $this->id;
+        $this->type = $type;
+        return $this;
     }
 
-    public function setName($name)
+    public function getType()
     {
-        $this->name = $name;
+        return $this->type;
     }
 
-    public function getName()
+    public function getTypePluralized()
     {
-        return $this->name;
+        return $this->getType().'s';
     }
 
-    public function setDescription($description)
+    protected function getParameterKey($parameterName)
     {
-        $this->description = $description;
+        $parameters = $this->getParameters();
+
+        if (isset($parameters[$parameterName])) {
+            return $parameterName;
+        }
+
+        foreach ($parameters as $field => $value) {
+            if (mb_strtolower($parameterName, 'utf-8') == mb_strtolower($field, 'utf-8')) {
+                return $field;
+            }
+        }
+
     }
 
-    public function getDescription()
+    public function setParameter($parameterName, $value, $paramChanged = true)
     {
-        return $this->description;
+        $parameterOriginalName = $this->getParameterKey($parameterName);
+
+        if (null !== $parameterOriginalName) {
+            $parameterName = $parameterOriginalName;
+        }
+
+        $this->parameters[$parameterName] = $value;
+        if ($paramChanged) {
+            $this->parametersChanged[$parameterName] = $value;
+        }
+        return $this;
     }
 
-    public function setComments($comments)
+    public function getParameter($parameterName)
     {
-        $this->comments = $comments;
+        $parameterOriginalName = $this->getParameterKey($parameterName);
+
+        if (null === $parameterOriginalName) {
+            throw new AlmEntityException('Field name "' . $parameterName . '" not found');
+        }
+
+        return $this->parameters[$parameterOriginalName];
     }
 
-    public function getComments()
+    public function getParameters()
     {
-        return $this->comments;
+        return $this->parameters;
     }
 
-    public function setOwner($owner)
+    public function getParametersChanged()
     {
-        $this->owner = $owner;
+        return $this->parametersChanged;
     }
 
-    public function getOwner()
+    public function isNew()
     {
-        return $this->owner;
+        if (isset($this->parameters['id'])) {
+            return false;
+        }
+        return true;
     }
 
-    public function setStatus($status)
+    /**
+     * @param $parameterName
+     * @return mixed
+     */
+    public function __get($parameterName)
     {
-        $this->status = $status;
-    }
-
-    public function getStatus()
-    {
-        return $this->owner;
-    }
-
-    public function setPriority($priority)
-    {
-        $this->priority = $priority;
-    }
-
-    public function getPriority()
-    {
-        return $this->priority;
+        return $this->getParameter($parameterName);
     }
 
 }

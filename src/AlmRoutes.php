@@ -39,9 +39,49 @@ class AlmRoutes
         return $this->host . '/qcbin/rest/is-authenticated';
     }
 
-    public function getEntityUrl()
+    public function getEntityUrl($entityType, $entityId = null)
     {
-        return $this->host . '/qcbin/rest/domains/' . $this->domain . '/projects/' . $this->project;
+        $url = $this->host . '/qcbin/rest/domains/' . $this->domain . '/projects/' . $this->project . '/' . $entityType;
+        if (null !== $entityId) {
+            $url .= '/' . $entityId;
+        }
+        return $url;
+    }
+
+    public function getEntityFieldsUrl($entityType, $onlyRequiredFields)
+    {
+        $url = $this->host . '/qcbin/rest/domains/' . $this->domain . '/projects/' . $this->project . '/customization/entities/' . $entityType . '/fields';
+        if ($onlyRequiredFields) {
+            $url .= '?required=true';
+        }
+        return $url;
+    }
+
+    public function getListsUrl($listId = null)
+    {
+        $url = $this->host . '/qcbin/rest/domains/' . $this->domain . '/projects/' . $this->project . '/customization/lists';
+        if (null !== $listId) {
+            $url .= '?id=' . $listId;
+        }
+        return $url;
+    }
+
+    public function getEntityCheckoutUrl($entityType, $entityId)
+    {
+        $url = $this->host . '/qcbin/rest/domains/' . $this->domain . '/projects/' . $this->project . '/' . $entityType . '/' . $entityId . '/versions/check-out';
+        return $url;
+    }
+
+    public function getEntityCheckinUrl($entityType, $entityId)
+    {
+        $url = $this->host . '/qcbin/rest/domains/' . $this->domain . '/projects/' . $this->project . '/' . $entityType . '/' . $entityId . '/versions/check-in';
+        return $url;
+    }
+
+    public function getEntityLockUrl($entityType, $entityId)
+    {
+        $url = $this->host . '/qcbin/rest/domains/' . $this->domain . '/projects/' . $this->project . '/' . $entityType . '/' . $entityId . '/lock';
+        return $url;
     }
 
 }

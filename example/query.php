@@ -10,30 +10,28 @@ require 'config.php';
 require 'menu.php';
 
 use StepanSib\AlmClient\AlmClient;
-use StepanSib\AlmClient\AlmQuery;
 use StepanSib\AlmClient\AlmEntity;
+use StepanSib\AlmClient\AlmEntityManager;
 
 $almClient = new AlmClient($connectionParams);
-$query = $almClient->getManager()->createQuery();
 
-// Create query and get result URL
-$plainQuery = $query->select(AlmQuery::ENTITY_DEFECT)
-    ->where('id', '>=5000')
-    ->where('status', 'Open')
-    ->where('owner', 'syudin')
-    ->getQueryUrl();
+$defects = $almClient->getManager()->getBy(AlmEntity::ENTITY_TYPE_DEFECT, array(
+    'id' => '='.$defectId,
+    //'status' => 'Open',
+    //'owner' => 'syudin',
+));
 
-// Execute query and iterate result
-$defects = $query->execute();
-
-/** @var AlmEntity $defect */
 foreach ($defects as $defect) {
-    echo 'Id: ' . $defect->getId() . '<br/>';
-    echo 'Status: ' . $defect->getStatus() . '<br/>';
-    echo 'Owner: ' . $defect->getOwner() . '<br/>';
-    echo 'Priority: ' . $defect->getPriority() . '<br/>';
-    echo 'Name: ' . $defect->getName() . '<br/>';
-    echo 'Description: ' . $defect->getDescription() . '<br/>';
-    echo 'Comments: ' . $defect->getComments() . '<br/>';
+
+    // You can access entity field by getParameter method
+    echo $defect->getParameter('id') . '<br/>';
+
+    // or by magic method
+    echo $defect->status . '<hr/>';
+
+    // or simply iterate through all of the fields
+    foreach ($defect->getParameters() as $field => $value) {
+        echo $field . ': ' . $value . '<br/>';
+    }
     echo '<hr/>';
 }
