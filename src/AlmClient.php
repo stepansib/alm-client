@@ -8,6 +8,8 @@
 
 namespace StepanSib\AlmClient;
 
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
 Class AlmClient
 {
 
@@ -26,29 +28,36 @@ Class AlmClient
     /** @var  AlmEntityManager */
     protected $manager;
 
-    /** @var  AlmEntityExtractor */
-    protected $entityExtractor;
-
     /**
      * AlmClient constructor.
      * @param array $connectionOptions
      */
     public function __construct(array $connectionOptions)
     {
-        $this->entityExtractor = new AlmEntityExtractor(get_class(new AlmEntity()), array(
-            'id' => 'id',
-            'owner' => 'owner',
-            'name' => 'name',
-            'description' => 'description',
-            'dev-comments' => 'comments',
-            'priority' => 'priority',
-            'status' => 'status',
-        ));
+
+        $resolver = new OptionsResolver();
+        $this->configureOptions($resolver);
+        $resolver->resolve($connectionOptions);
+
         $this->cookieStorage = new AlmCurlCookieStorage();
         $this->curl = new AlmCurl($this->cookieStorage);
         $this->routes = new AlmRoutes($connectionOptions['host'], $connectionOptions['domain'], $connectionOptions['project']);
         $this->authenticator = new AlmAuthenticator($connectionOptions['username'], $connectionOptions['password'], $this->curl, $this->cookieStorage, $this->routes);
-        $this->manager = new AlmEntityManager($this->curl, $this->routes, $this->entityExtractor);
+        $this->manager = new AlmEntityManager($this->curl, $this->routes);
+    }
+
+    /**
+     * @param OptionsResolver $resolver
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setRequired(array(
+            'host',
+            'domain',
+            'project',
+            'username',
+            'password',
+        ));
     }
 
     /**
@@ -57,14 +66,6 @@ Class AlmClient
     public function getAuthenticator()
     {
         return $this->authenticator;
-    }
-
-    /**
-     * @return AlmEntityExtractor
-     */
-    public function getEntityExtractor()
-    {
-        return $this->entityExtractor;
     }
 
     /**

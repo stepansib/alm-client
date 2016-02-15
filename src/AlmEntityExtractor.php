@@ -8,59 +8,50 @@
 
 namespace StepanSib\AlmClient;
 
-use StepanSib\AlmClient\Exception\AlmEntityExtractorException;
-
 class AlmEntityExtractor
 {
 
-    /** @var array */
-    protected $fieldsMapping;
-
-    /** @var  string */
-    protected $className;
-
-    /**
-     * AlmEntityExtractor constructor.
-     * @param $entityClass
-     * @param array $fieldsMapping
-     */
-    public function __construct($entityClass, array $fieldsMapping)
+    public function pack(AlmEntity $entity, array $editableParameters = array())
     {
-        $this->fieldsMapping = $fieldsMapping;
-        $this->className = $entityClass;
-    }
+        $xml = new \SimpleXMLElement('<Entity></Entity>');
+        $xml->addAttribute('Type', $entity->getType());
+        $xmlFields = $xml->addChild('Fields');
 
-    public function pack()
-    {
+        $parameters = $entity->getParameters();
 
+        foreach ($parameters as $field => $value) {
+            $isParameterPackable = true;
+
+            if (count($editableParameters) > 0 && !in_array($field, $editableParameters)) {
+                $isParameterPackable = false;
+            }
+
+            if ($isParameterPackable) {
+                $xmlField = $xmlFields->addChild('Field');
+                $xmlField->addAttribute('Name', $field);
+                $xmlField->addChild('Value', $value);
+            }
+        }
+
+        return $xml;
     }
 
     /**
      * @param \SimpleXMLElement $entityXml
      * @return AlmEntity
-     * @throws AlmEntityExtractorException
      */
     public function extract(\SimpleXMLElement $entityXml)
     {
-        try {
-            $entity = new AlmEntity();
-            $entityXml = $entityXml->Fields[0];
-            foreach ($entityXml->Field as $field) {
-                foreach ($this->fieldsMapping as $xmlPropertyMapping => $entityPropertyMapping) {
-                    if ($field->attributes()->Name == $xmlPropertyMapping) {
-                        $setter = 'set' . $entityPropertyMapping;
-                        if (!method_exists($entity, $setter)) {
-                            throw new AlmEntityExtractorException('Setter \'' . $setter . '\' not found in ' . get_class($entity));
-                        }
-                        $entity->$setter($field->Value[0]);
-                    }
-                }
+        $entity = new AlmEntity($entityXml->attributes()->Type);
+
+        $entityXml = $entityXml->Fields[0];
+        foreach ($entityXml->Field as $field) {
+            if (trim((string)$field->Value[0]) !== '') {
+                $entity->setParameter((string)$field->attributes()->Name, $field->Value[0], false);
             }
-            return $entity;
-        } catch (\Exception $e) {
-            throw new AlmEntityExtractorException($e->getMessage());
         }
 
+        return $entity;
     }
 
 }

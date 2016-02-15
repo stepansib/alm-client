@@ -2,18 +2,18 @@
 /**
  * Created by PhpStorm.
  * User: Stepan
- * Date: 11.02.2016
- * Time: 21:46
+ * Date: 14.02.2016
+ * Time: 22:16
  */
 
 namespace StepanSib\AlmClient\Exception;
 
-class AlmQueryException extends \Exception
+class AlmEntityException extends \Exception
 {
 
     public function setMessage($message)
     {
-        $this->message = 'Query error: '.$message;
+        $this->message = 'ALM entity error: ' . $message;
     }
 
 }

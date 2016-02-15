@@ -23,5 +23,6 @@ if (file_exists(__DIR__ . '/connection_params.php')) {
     );
 }
 
+$defectId = '5410';
 
 ?>

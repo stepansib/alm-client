@@ -9,6 +9,7 @@
 namespace StepanSib\AlmClient;
 
 use StepanSib\AlmClient\Exception\AlmCurlException;
+use StepanSib\AlmClient\Exception\AlmException;
 
 Class AlmCurl
 {
@@ -19,7 +20,6 @@ Class AlmCurl
     const HTTP_405 = '405: method not supported by resource';
     const HTTP_406 = '406: unsupported ACCEPT type';
     const HTTP_415 = '415: unsupported request content type';
-    const HTTP_500 = '500: Internal server error';
 
     /** @var resource */
     protected $curl;
@@ -68,20 +68,57 @@ Class AlmCurl
 
         if (count($headers) > 0) {
             curl_setopt($this->curl, CURLOPT_HTTPHEADER, $headers);
-            return $this;
         }
 
-        curl_setopt($this->curl, CURLOPT_HTTPHEADER, array());
         return $this;
     }
+
+    public function setPost($body = null)
+    {
+        $this->curlInit();
+
+        curl_setopt($this->curl, CURLOPT_POST, 1);
+        if (null !== $body) {
+            curl_setopt($this->curl, CURLOPT_POSTFIELDS, $body);
+        }
+
+        return $this;
+    }
+
+    public function setPut($body = null)
+    {
+        $this->curlInit();
+
+        curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, "PUT");
+        if (null !== $body) {
+            curl_setopt($this->curl, CURLOPT_POSTFIELDS, $body);
+        }
+
+        return $this;
+    }
+
+    public function setDelete($body = null)
+    {
+        $this->curlInit();
+
+        curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+        if (null !== $body) {
+            curl_setopt($this->curl, CURLOPT_POSTFIELDS, $body);
+        }
+
+        return $this;
+    }
+
 
     /**
      * @param $url
      * @return $this
      * @throws AlmCurlException
+     * @throws AlmException
      */
     public function exec($url)
     {
+
         $this->curlInit();
 
         curl_setopt($this->curl, CURLOPT_URL, $url);
@@ -94,18 +131,35 @@ Class AlmCurl
             $this->info = curl_getinfo($this->curl);
 
             if (!$this->isResponseValid()) {
+
+                if ($this->getHttpCode() == '500') {
+                    $error = $this->getInternalError();
+                    throw new AlmException($error);
+                }
+
                 $httpCodeConstantName = get_class($this) . '::HTTP_' . $this->getHttpCode();
                 if (defined($httpCodeConstantName)) {
-                    throw new AlmCurlException($this->getHttpCode() . ': ' . constant($httpCodeConstantName));
-                } else {
-                    throw new AlmCurlException('Disallowed HTTP response code: ' . $this->getHttpCode());
+                    throw new AlmCurlException(constant($httpCodeConstantName));
                 }
+
+                throw new AlmCurlException('Disallowed HTTP response code: ' . $this->getHttpCode());
+
             }
         } else {
             throw new AlmCurlException('Curl error: ' . curl_error($this->curl));
         }
 
+        $this->close();
         return $this;
+    }
+
+    protected function getInternalError()
+    {
+        $xml = simplexml_load_string($this->getResult());
+        if (false === $xml || !property_exists($xml, 'Title')) {
+            return "Undefined error";
+        }
+        return $xml->Title[0];
     }
 
     /**
@@ -168,13 +222,11 @@ Class AlmCurl
     /**
      * @return $this
      */
-    public function close()
+    protected function close()
     {
         if ($this->curl !== null) {
             curl_close($this->curl);
             $this->curl = null;
-
-            $this->clearResults();
         }
 
         return $this;
