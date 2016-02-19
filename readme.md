@@ -8,14 +8,12 @@
 Easily interact with HP ALM using REST API. 
 
 ##Installation
----
 Simply run
 ```bash
 composer require stepansib/alm-client
 ```
 
 ##Usage
----
 ###Setting up ALM/QC connection
 The first step is to setup correct connection credentials and instantiate new AlmClient object
 ```php
