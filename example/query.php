@@ -15,7 +15,7 @@ use StepanSib\AlmClient\AlmEntityManager;
 
 $almClient = new AlmClient($connectionParams);
 
-$defects = $almClient->getManager()->getBy(AlmEntity::ENTITY_TYPE_DEFECT, array(
+$defects = $almClient->getManager()->getBy(AlmEntityManager::ENTITY_TYPE_DEFECT, array(
     'id' => '='.$defectId,
     //'status' => 'Open',
     //'owner' => 'syudin',
@@ -27,7 +27,7 @@ foreach ($defects as $defect) {
     echo $defect->getParameter('id') . '<br/>';
 
     // or by magic method
-    echo $defect->status . '<hr/>';
+    echo $defect->id . '<hr/>';
 
     // or simply iterate through all of the fields
     foreach ($defect->getParameters() as $field => $value) {

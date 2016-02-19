@@ -15,6 +15,10 @@ class AlmEntityManager
 
     const HYDRATION_ENTITY = 'array';
     const HYDRATION_NONE = 'none';
+    const ENTITY_TYPE_TEST = 'test';
+    const ENTITY_TYPE_REQUIREMENT = 'requirement';
+    const ENTITY_TYPE_RESOURCE = 'resource';
+    const ENTITY_TYPE_DEFECT = 'defect';
 
     /** @var AlmCurl */
     protected $curl;
@@ -138,7 +142,21 @@ class AlmEntityManager
 
     /**
      * @param AlmEntity $entity
+     * @throws Exception\AlmCurlException
+     * @throws Exception\AlmException
+     */
+    public function delete(AlmEntity $entity)
+    {
+        $this->curl->setHeaders(array('DELETE /HTTP/1.1'))
+            ->setDelete()
+            ->exec($this->routes->getEntityUrl($entity->getTypePluralized(), $entity->id));
+
+    }
+
+    /**
+     * @param AlmEntity $entity
      * @return AlmEntity
+     * @throws AlmEntityManagerException
      * @throws Exception\AlmCurlException
      * @throws Exception\AlmException
      */
@@ -163,15 +181,18 @@ class AlmEntityManager
 
         } else {
 
-            $ignoreCheckins = false;
-
             $entityXml = $this->entityExtractor->pack($entity, $this->parametersManager->getEntityEditableParameters($entity));
 
-            $this->entityLocker->lockEntity($entity);
-            try {
+            if ($this->entityLocker->isEntityLocked($entity)) {
+                if (!$this->entityLocker->isEntityLockedByMe($entity)) {
+                    throw new AlmEntityManagerException('Entity is locked by someone');
+                }
+            } else {
+                $this->entityLocker->lockEntity($entity);
+            }
+
+            if ($this->isEntityVersioning($entity)) {
                 $this->getEntityLocker()->checkOutEntity($entity);
-            } catch (\Exception $e) {
-                $ignoreCheckins = true;
             }
 
             array_push($headers, 'PUT /HTTP/1.1');
@@ -182,7 +203,7 @@ class AlmEntityManager
 
             $xml = simplexml_load_string($this->curl->getResult());
 
-            if (!$ignoreCheckins) {
+            if ($this->isEntityVersioning($entity)) {
                 $this->getEntityLocker()->checkInEntity($entity);
             }
 
@@ -192,6 +213,22 @@ class AlmEntityManager
 
         return $this->entityExtractor->extract($xml);
 
+    }
+
+
+    /**
+     * @param AlmEntity $entity
+     * @return bool
+     */
+    public function isEntityVersioning(AlmEntity $entity)
+    {
+        if ($entity->getType() == AlmEntityManager::ENTITY_TYPE_TEST
+            || $entity->getType() == AlmEntityManager::ENTITY_TYPE_REQUIREMENT
+            || $entity->getType() == AlmEntityManager::ENTITY_TYPE_RESOURCE
+        ) {
+            return true;
+        }
+        return false;
     }
 
 

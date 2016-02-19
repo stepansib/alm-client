@@ -16,10 +16,10 @@ use StepanSib\AlmClient\AlmEntityManager;
 
 $almClient = new AlmClient($connectionParams);
 
-$defectsRawResponse = $almClient->getManager()->getBy(AlmEntity::ENTITY_TYPE_DEFECT, array(
+$defectsRawResponse = $almClient->getManager()->getBy(AlmEntityManager::ENTITY_TYPE_DEFECT, array(
     'id' => '='.$defectId,
-    'status' => 'Open',
-    'owner' => 'syudin',
+    //'status' => 'Open',
+    //'owner' => 'syudin',
 ), AlmEntityManager::HYDRATION_NONE);
 
 echo $defectsRawResponse;
