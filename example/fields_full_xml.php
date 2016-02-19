@@ -7,7 +7,6 @@
  */
 
 require 'config.php';
-//require 'menu.php';
 require 'header_xml.php';
 
 use StepanSib\AlmClient\AlmClient;

@@ -66,8 +66,46 @@ $defects = $almClient->getManager()->getBy(AlmEntityManager::ENTITY_TYPE_DEFECT,
 echo $defects;
 ```
 
-###Create a new entity
+### The entity
+Entity field values can be accessed in two ways
+```php
+// through getter method
+$paramValue = $entity->getParameter('detected-by');
+
+//or directly via magic getter method 
+$paramValue = $entity->detected-by;
+```
+
+To create a new parameter or change the existing parameter use setter method 
+```php
+$entity->setParameter('description', 'my defect description');
+```
+
+To get all parameters in array use 
+```php
+$entityParameters = $entity->getParameters();
+```
+
+To get and change entity type use
+```php
+$entityType = $entity->getType();
+$entity->setType(AlmEntityManager::ENTITY_TYPE_RESOURCE); //This method also called in AlmEntity::__construct
+```
+
+### Create a new entity
 To create a new entity you have to instantiate an AlmEntity object
+```php
+$entity = new AlmEntity(AlmEntityManager::ENTITY_TYPE_DEFECT);
+```
+
+###Save an entity
+To save (persist or update) an entity use the `AlmEntityManager::save()` method
+```php
+$almClient->getManager()->save($entity);
+```
+This will work both for new and existing entities. This method returns saved AlmEntity object
+
+Full workflow example
 ```php
 $entity = new AlmEntity(AlmEntityManager::ENTITY_TYPE_DEFECT);
 
@@ -82,22 +120,6 @@ $entity->setParameter('name', 'REST API test defect ' . date('d/m/Y H:i:s'))
 $entity = $almClient->getManager()->save($entity);
 echo 'New entity id: ' . $entity->id;
 ```
-
-### The entity
-Entity field values can be accessed through `$entity->getParameter('detected-by')` method or directly via magic getter method `$entity->detected-by`
-
-To create a new parameter or change the existing parameter use setter method `$entity->setParameter('description', 'my defect description')`
-
-To get all parameters in array use the `$entity->getParameters()` method
-
-To get and change entity type use`$entity->getType()` and `$entity->setType(AlmEntityManager::ENTITY_TYPE_RESOURCE)`
-
-###Save an entity
-To save (persist or update) an entity use the `AlmEntityManager::save()` method
-```php
-$almClient->getManager()->save($entity);
-```
-This will work both for new and existing entities. This method returns saved AlmEntity object
 
 ### Get entity fields list (and editable fields list)
 Todo: complete this chapter

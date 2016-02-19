@@ -19,8 +19,8 @@ $defectRequiredFields = $almClient->getManager()->getParametersManager()->getEnt
 
 ?>
     <pre>
-    <?
+    <?php
     echo var_export($defectRequiredFields, true);
     ?>
     </pre>
-<?
+<?php

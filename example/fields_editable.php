@@ -19,8 +19,8 @@ $defectEditableFields = $almClient->getManager()->getEntityEditableParameters(Al
 
 ?>
     <pre>
-    <?
+    <?php
     echo var_export($defectEditableFields, true);
     ?>
     </pre>
-<?
+<?php

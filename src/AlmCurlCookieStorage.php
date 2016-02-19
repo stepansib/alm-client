@@ -8,6 +8,8 @@
 
 namespace StepanSib\AlmClient;
 
+use StepanSib\AlmClient\Exception\AlmCurlCookieStorageException;
+
 class AlmCurlCookieStorage
 {
 
@@ -16,8 +18,7 @@ class AlmCurlCookieStorage
     public function __construct()
     {
         if (!session_id()) {
-            // TODO: Replace with corect Exception
-            throw new \Exception('Session is not started');
+            throw new AlmCurlCookieStorageException('Session is not started');
         }
     }
 

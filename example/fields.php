@@ -19,8 +19,8 @@ $defectFields = $almClient->getManager()->getParametersManager()->getEntityTypeF
 
 ?>
     <pre>
-    <?
+    <?php
     echo var_export($defectFields, true);
     ?>
     </pre>
-<?
+<?php

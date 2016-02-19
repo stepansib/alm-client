@@ -7,7 +7,6 @@
  */
 
 require 'config.php';
-//require 'menu.php';
 require 'header_xml.php';
 
 use StepanSib\AlmClient\AlmClient;
@@ -18,8 +17,6 @@ $almClient = new AlmClient($connectionParams);
 
 $defectsRawResponse = $almClient->getManager()->getBy(AlmEntityManager::ENTITY_TYPE_DEFECT, array(
     'id' => '='.$defectId,
-    //'status' => 'Open',
-    //'owner' => 'syudin',
 ), AlmEntityManager::HYDRATION_NONE);
 
 echo $defectsRawResponse;
