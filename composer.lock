@@ -1,24 +1,24 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lockEntity-the-lockEntity-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "af0e71824d64e77ab8a6596230ebc375",
-    "content-hash": "b90ca058cf7be2a8c4f1f782f7da66ee",
+    "hash": "d69e70d97685ec4ef17d7ed89cf37394",
+    "content-hash": "80ec0eda7225ab240a81bb4e62688ce4",
     "packages": [
         {
             "name": "symfony/options-resolver",
-            "version": "v3.0.2",
+            "version": "v3.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/options-resolver.git",
-                "reference": "bc7ee3ef3905f7c21fbed4e921cb39d6518b1300"
+                "reference": "77f7252e377e1dc021ba74defe12a19a45bb1212"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/bc7ee3ef3905f7c21fbed4e921cb39d6518b1300",
-                "reference": "bc7ee3ef3905f7c21fbed4e921cb39d6518b1300",
+                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/77f7252e377e1dc021ba74defe12a19a45bb1212",
+                "reference": "77f7252e377e1dc021ba74defe12a19a45bb1212",
                 "shasum": ""
             },
             "require": {
@@ -59,7 +59,7 @@
                 "configuration",
                 "options"
             ],
-            "time": "2016-01-21 09:38:31"
+            "time": "2016-05-09 18:14:44"
         }
     ],
     "packages-dev": [],
@@ -68,6 +68,8 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "lib-curl": "*"
+    },
     "platform-dev": []
 }
