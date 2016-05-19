@@ -1,4 +1,4 @@
-##HP ALM REST Client   
+## HP ALM/QC REST Client   
 
 [![SensioLabs Insight](https://img.shields.io/sensiolabs/i/ae30c4dd-a564-45cc-b393-649e43d43238.svg)](https://insight.sensiolabs.com/projects/ae30c4dd-a564-45cc-b393-649e43d43238)
 [![Codacy branch](https://img.shields.io/codacy/1c4d056c8029418b8ffaf377994e96ce/master.svg)](https://www.codacy.com/app/stepan-sib/alm-client)
@@ -121,7 +121,7 @@ $entity = $almClient->getManager()->save($entity);
 echo 'New entity id: ' . $entity->id;
 ```
 
-### Get entity fields list (and editable fields list)
+### Get entity available fields list (and editable fields list)
 Todo: complete this chapter
 
 ### Get editable fields list
