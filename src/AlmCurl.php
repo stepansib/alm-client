@@ -53,7 +53,7 @@ Class AlmCurl
             curl_setopt($this->curl, CURLOPT_HEADER, 0);
             curl_setopt($this->curl, CURLOPT_HTTPGET, 1);
             curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT, 5); //connection timeout
+            curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT, 10); //connection timeout
             curl_setopt($this->curl, CURLOPT_TIMEOUT, 30); //overall timeout
 
             $this->clearResults();
@@ -78,9 +78,7 @@ Class AlmCurl
         $this->curlInit();
 
         curl_setopt($this->curl, CURLOPT_POST, 1);
-        if (null !== $body) {
-            curl_setopt($this->curl, CURLOPT_POSTFIELDS, $body);
-        }
+        curl_setopt($this->curl, CURLOPT_POSTFIELDS, $body);
 
         return $this;
     }
@@ -90,9 +88,7 @@ Class AlmCurl
         $this->curlInit();
 
         curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, "PUT");
-        if (null !== $body) {
-            curl_setopt($this->curl, CURLOPT_POSTFIELDS, $body);
-        }
+        curl_setopt($this->curl, CURLOPT_POSTFIELDS, $body);
 
         return $this;
     }
@@ -102,9 +98,7 @@ Class AlmCurl
         $this->curlInit();
 
         curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, "DELETE");
-        if (null !== $body) {
-            curl_setopt($this->curl, CURLOPT_POSTFIELDS, $body);
-        }
+        curl_setopt($this->curl, CURLOPT_POSTFIELDS, $body);
 
         return $this;
     }

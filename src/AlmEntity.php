@@ -13,9 +13,6 @@ use StepanSib\AlmClient\Exception\AlmEntityException;
 class AlmEntity
 {
 
-    const ENTITY_TYPE_TEST = 'test';
-    const ENTITY_TYPE_DEFECT = 'defect';
-
     protected $parameters;
 
     protected $parametersChanged;

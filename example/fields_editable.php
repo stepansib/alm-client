@@ -15,12 +15,12 @@ use StepanSib\AlmClient\AlmEntityManager;
 
 $almClient = new AlmClient($connectionParams);
 
-$defectEditableFields = $almClient->getManager()->getEntityEditableParameters(AlmEntity::ENTITY_TYPE_DEFECT);
+$defectEditableFields = $almClient->getManager()->getEntityEditableParameters(AlmEntityManager::ENTITY_TYPE_DEFECT);
 
 ?>
     <pre>
-    <?
+    <?php
     echo var_export($defectEditableFields, true);
     ?>
     </pre>
-<?
+<?php

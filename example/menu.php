@@ -21,6 +21,7 @@
 <a style='margin-right: 15px;' href="create.php">Create defect</a>
 <a style='margin-right: 15px;' href="lock_status.php">Defect lock status</a>
 <a style='margin-right: 15px;' href="update.php">Update defect</a>
+<a style='margin-right: 15px;' href="delete.php">Delete defect</a>
 
 <?php
 

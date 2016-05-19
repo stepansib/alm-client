@@ -3,15 +3,22 @@
  * Created by PhpStorm.
  * User: Stepan
  * Date: 15.02.2016
- * Time: 12:29
+ * Time: 21:23
  */
 
 require 'config.php';
-require 'header_xml.php';
+require 'menu.php';
 
 use StepanSib\AlmClient\AlmClient;
 use StepanSib\AlmClient\AlmEntity;
 use StepanSib\AlmClient\AlmEntityManager;
 
 $almClient = new AlmClient($connectionParams);
-echo $almClient->getManager()->getParametersManager()->getEntityTypeFields(AlmEntityManager::ENTITY_TYPE_DEFECT, false, true);
+
+$entity = $almClient->getManager()->getOneBy(AlmEntityManager::ENTITY_TYPE_DEFECT, array(
+    'id' => $defectId
+));
+
+$almClient->getManager()->delete($entity);
+
+echo 'Entity has been deleted';

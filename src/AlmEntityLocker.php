@@ -35,8 +35,14 @@ class AlmEntityLocker
      */
     public function lockEntity(AlmEntity $entity)
     {
-        $this->curl->setHeaders(array('POST /HTTP/1.1'))
-            ->setPost()
+        $this->curl->setHeaders(array(
+            'POST /HTTP/1.1',
+            'Content-Type: application/xml',
+            'Accept: application/xml',
+        ));
+
+        $this->curl->setPost()
+            ->createCookie()
             ->exec($this->routes->getEntityLockUrl($entity->getTypePluralized(), $entity->id));
     }
 
@@ -47,7 +53,11 @@ class AlmEntityLocker
      */
     public function unlockEntity(AlmEntity $entity)
     {
-        $this->curl->setHeaders(array('DELETE /HTTP/1.1'))
+        $this->curl->setHeaders(array(
+            'DELETE /HTTP/1.1',
+            'Content-Type: application/xml',
+            //'Accept: application/xml',
+        ))
             ->setDelete()
             ->exec($this->routes->getEntityLockUrl($entity->getTypePluralized(), $entity->id));
     }
@@ -62,7 +72,7 @@ class AlmEntityLocker
     {
         $this->curl->exec($this->routes->getEntityLockUrl($entity->getTypePluralized(), $entity->id));
         $xml = simplexml_load_string($this->curl->getResult());
-        return (string)$xml->LockStatus[0];
+        return (string)$xml->LockStatus[0] . ' (' . (string)$xml->LockUser[0] . ', ' . (string)$xml->LockedByMe[0] . ')';
     }
 
     /**
@@ -88,4 +98,29 @@ class AlmEntityLocker
             ->setPost()
             ->exec($this->routes->getEntityCheckinUrl($entity->getTypePluralized(), $entity->id));
     }
+
+    /**
+     * @param AlmEntity $entity
+     * @return bool
+     */
+    public function isEntityLocked(AlmEntity $entity)
+    {
+        if (mb_substr_count($this->getEntityLockStatus($entity), 'UNLOCKED', 'utf-8') > 0) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @param AlmEntity $entity
+     * @return bool
+     */
+    public function isEntityLockedByMe(AlmEntity $entity)
+    {
+        if (mb_substr_count($this->getEntityLockStatus($entity), 'LOCKED_BY_ME', 'utf-8') > 0) {
+            return true;
+        }
+        return false;
+    }
+
 }
