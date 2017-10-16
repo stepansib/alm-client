@@ -92,7 +92,7 @@ class AlmEntityManager
      */
     public function getOneBy($entityType, array $criteria)
     {
-        $result = $this->getBy($entityType, $criteria, self::HYDRATION_ENTITY);
+        $result = $this->getBy($entityType, $criteria);
         return $result[0];
     }
 
@@ -100,13 +100,19 @@ class AlmEntityManager
      * @param $entityType
      * @param array $criteria
      * @param string $hydration
+     * @param array $fields
      * @return array|null|string
      * @throws AlmEntityManagerException
      * @throws Exception\AlmCurlException
      * @throws Exception\AlmException
      */
-    public function getBy($entityType, array $criteria, $hydration = self::HYDRATION_ENTITY)
+    public function getBy($entityType, array $criteria, array $fields = array(), $hydration = self::HYDRATION_ENTITY)
     {
+        $fieldsList = '';
+        if (count($fields)) {
+            $fieldsList = '&fields=' . implode(',', $fields);
+        }
+
         $criteriaProcessed = array();
 
         if (count($criteria) == 0) {
@@ -117,7 +123,7 @@ class AlmEntityManager
             array_push($criteriaProcessed, $key . '[' . $value . ']');
         }
 
-        $url = $this->routes->getEntityUrl($this->pluralizeEntityType($entityType)) . '?query={' . implode(';', $criteriaProcessed) . '}';
+        $url = $this->routes->getEntityUrl($this->pluralizeEntityType($entityType)) . '?query={' . implode(';', $criteriaProcessed) . '}' . $fieldsList . '&page-size=1000';
         $resultRaw = $this->curl->exec($url)->getResult();
 
         switch ($hydration) {
