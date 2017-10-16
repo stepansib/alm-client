@@ -120,7 +120,7 @@ class AlmEntityManager
         }
 
         foreach ($criteria as $key => $value) {
-            array_push($criteriaProcessed, $key . '[' . $value . ']');
+            array_push($criteriaProcessed, $key . '[' . rawurlencode($value) . ']');
         }
 
         $url = $this->routes->getEntityUrl($this->pluralizeEntityType($entityType)) . '?query={' . implode(';', $criteriaProcessed) . '}' . $fieldsList . '&page-size=1000';
