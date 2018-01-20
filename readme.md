@@ -7,14 +7,14 @@
 
 Easily interact with HP ALM using REST API. 
 
-##Installation
+## Installation
 Simply run
 ```bash
 composer require stepansib/alm-client
 ```
 
-##Usage
-###Setting up ALM/QC connection
+## Usage
+### Setting up ALM/QC connection
 The first step is to setup correct connection credentials and instantiate new AlmClient object
 ```php
 $almClient = new AlmClient(array(
@@ -26,7 +26,7 @@ $almClient = new AlmClient(array(
 ));
 ```
 
-###Authentication
+### Authentication
 You need to authenticate to start work with ALM
 ```php
 $almClient = new AlmClient($connectionParams);
@@ -41,7 +41,7 @@ When you finish your work with ALM/QC use logout method
 $almClient->getAuthenticator()->logout();
 ```
 
-###Get entity by criteria
+### Get entity by criteria
 All entities are returned in AlmEntity objects. You must specify ALM/QC entity type (defect, test, run etc) and array of criterias to filter entites
 ```php
 // you can get the array of entities
@@ -98,7 +98,7 @@ To create a new entity you have to instantiate an AlmEntity object
 $entity = new AlmEntity(AlmEntityManager::ENTITY_TYPE_DEFECT);
 ```
 
-###Save an entity
+### Save an entity
 To save (persist or update) an entity use the `AlmEntityManager::save()` method
 ```php
 $almClient->getManager()->save($entity);
