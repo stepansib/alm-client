@@ -106,7 +106,7 @@ class AlmEntityManager
      * @throws Exception\AlmCurlException
      * @throws Exception\AlmException
      */
-    public function getBy($entityType, array $criteria, array $fields = array(), $perPage = 250, $page = 1, $hydration = self::HYDRATION_ENTITY)
+    public function getBy($entityType, array $criteria, array $fields = array(), $perPage = 250, $page = 1, $orderBy = '{id[DESC]}', $hydration = self::HYDRATION_ENTITY)
     {
         $fieldsList = '';
         if (count($fields)) {
@@ -127,7 +127,7 @@ class AlmEntityManager
             array_push($criteriaProcessed, $key . '[' . rawurlencode($value) . ']');
         }
 
-        $url = $this->routes->getEntityUrl($this->pluralizeEntityType($entityType)) . '?query={' . implode(';', $criteriaProcessed) . '}' . $fieldsList . '&page-size=' . $perPage . '&start-index=' . $page;
+        $url = $this->routes->getEntityUrl($this->pluralizeEntityType($entityType)) . '?query={' . implode(';', $criteriaProcessed) . '}' . $fieldsList . '&page-size=' . $perPage . '&start-index=' . $page . '&order-by=' . $orderBy;
         $resultRaw = $this->curl->exec($url)->getResult();
 
         switch ($hydration) {
