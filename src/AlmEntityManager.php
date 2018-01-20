@@ -114,7 +114,7 @@ class AlmEntityManager
         }
 
         if ($page > 1) {
-            $page = ($perPage - 1) * $page;
+            $page = $perPage * $page;
         }
 
         $criteriaProcessed = array();
