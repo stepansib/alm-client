@@ -16,10 +16,22 @@ use StepanSib\AlmClient\AlmEntityManager;
 $almClient = new AlmClient($connectionParams);
 
 $defects = $almClient->getManager()->getBy(AlmEntityManager::ENTITY_TYPE_DEFECT, array(
-    'id' => '='.$defectId,
+    //'id' => '='.$defectId,
+    //'id' => $defectId,
     //'status' => 'Open',
-    //'owner' => 'syudin',
-));
+    'owner' => 'syudin',
+), array(
+    'name',
+    'id',
+    'priority',
+    'owner',
+    'status',
+    'creation-time',
+    'detected-by',
+),
+    10,
+300
+);
 
 foreach ($defects as $defect) {
 
