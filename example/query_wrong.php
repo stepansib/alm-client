@@ -19,6 +19,6 @@ $defectsRawResponse = $almClient->getManager()->getBy(AlmEntityManager::ENTITY_T
     '' => '>=50000',
     'status' => 'Open',
     'owner' => 'syudin',
-), AlmEntityManager::HYDRATION_NONE);
+), array(), 250, 1, 'status', AlmEntityManager::HYDRATION_NONE);
 
 echo $defectsRawResponse;

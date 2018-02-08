@@ -29,8 +29,8 @@ $defects = $almClient->getManager()->getBy(AlmEntityManager::ENTITY_TYPE_DEFECT,
     'creation-time',
     'detected-by',
 ),
-    10,
-300
+    100,
+1
 );
 
 foreach ($defects as $defect) {
