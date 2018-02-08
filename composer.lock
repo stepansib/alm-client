@@ -4,29 +4,29 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "b27a2b33053a4f1632849e69e52beeb7",
+    "content-hash": "1f945175e0490823f545d7b037a2b638",
     "packages": [
         {
             "name": "symfony/options-resolver",
-            "version": "v2.8.28",
+            "version": "v3.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/options-resolver.git",
-                "reference": "cdfc29364bfa48304929921461b8d9d937031e87"
+                "reference": "f3109a6aedd20e35c3a33190e932c2b063b7b50e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/cdfc29364bfa48304929921461b8d9d937031e87",
-                "reference": "cdfc29364bfa48304929921461b8d9d937031e87",
+                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/f3109a6aedd20e35c3a33190e932c2b063b7b50e",
+                "reference": "f3109a6aedd20e35c3a33190e932c2b063b7b50e",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9"
+                "php": "^5.5.9|>=7.0.8"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "3.4-dev"
                 }
             },
             "autoload": {
@@ -58,7 +58,7 @@
                 "configuration",
                 "options"
             ],
-            "time": "2017-09-11T20:39:16+00:00"
+            "time": "2018-01-11T07:56:07+00:00"
         }
     ],
     "packages-dev": [],
