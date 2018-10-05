@@ -26,12 +26,12 @@ class AlmRoutes
 
     public function getLoginUrl()
     {
-        return $this->host . '/qcbin/authentication/sign-in';
+        return $this->host . '/qcbin/api/authentication/sign-in';
     }
 
     public function getLogoutUrl()
     {
-        return $this->host . '/qcbin/authentication/sign-out';
+        return $this->host . '/qcbin/api/authentication/sign-out';
     }
 
     public function getAuthenticationCheckUrl()
@@ -84,9 +84,9 @@ class AlmRoutes
         return $url;
     }
 
-    public function getFoldersUrl($folderType)
+    public function getFoldersUrl($folderType, $start = 1, $pageSize = 500)
     {
-        $url = $this->host . '/qcbin/rest/domains/' . $this->domain . '/projects/' . $this->project . '/' . $folderType;
+        $url = $this->host . '/qcbin/rest/domains/' . $this->domain . '/projects/' . $this->project . '/' . $folderType . '?page-size=' . $pageSize . '&start-index=' . $start;
         return $url;
     }
 }

@@ -34,13 +34,15 @@ class AlmFolderManager
 
     /**
      * @param string $type
+     * @param int $start
+     * @param int $pageSize
      * @return mixed
      */
-    public function getFolders($type)
+    public function getFolders($type, $start = 1, $pageSize = 500)
     {
         if (null === $this->folders) {
             try {
-                $this->refreshFolders($type);
+                $this->refreshFolders($type, $start, $pageSize);
             } catch (Exception\AlmCurlException $e) {
             } catch (AlmEntityParametersManagerException $e) {
             } catch (Exception\AlmException $e) {
@@ -53,13 +55,15 @@ class AlmFolderManager
 
     /**
      * @param string $type folder type test-folders|test-set-folders
+     * @param int $start
+     * @param int $pageSize
      * @throws AlmEntityParametersManagerException
      * @throws Exception\AlmCurlException
      * @throws Exception\AlmException
      */
-    protected function refreshFolders($type)
+    protected function refreshFolders($type, $start = 1, $pageSize = 500)
     {
-        $this->curl->exec($this->routes->getFoldersUrl($type));
+        $this->curl->exec($this->routes->getFoldersUrl($type, $start, $pageSize));
         $xml = simplexml_load_string($this->curl->getResult());
 
         if (false === $xml) {

@@ -58,6 +58,8 @@ Class AlmClient
             'project',
             'username',
             'password',
+            'proxy_host',
+            'proxy_port',
         ));
     }
 
