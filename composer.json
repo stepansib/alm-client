@@ -15,6 +15,7 @@
     },
     "require": {
         "lib-curl": "*",
+        "ext-curl": "*",
         "symfony/options-resolver": "^3"
     }
 }

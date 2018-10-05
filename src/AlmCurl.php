@@ -33,13 +33,18 @@ Class AlmCurl
     /** @var AlmCurlCookieStorage */
     protected $cookieStorage;
 
+    /** @var array */
+    protected $options;
     /**
      * AlmCurl constructor.
      * @param AlmCurlCookieStorage $cookieStorage
+     * @param array $options
      */
-    public function __construct(AlmCurlCookieStorage $cookieStorage)
+    public function __construct(AlmCurlCookieStorage $cookieStorage, $options = [])
     {
         $this->cookieStorage = $cookieStorage;
+        $this->options = $options;
+
         return $this;
     }
 
@@ -55,6 +60,11 @@ Class AlmCurl
             curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT, 10); //connection timeout
             curl_setopt($this->curl, CURLOPT_TIMEOUT, 30); //overall timeout
+
+            if (!empty($this->options['proxy_host']) && !empty($this->options['proxy_port'])){
+                curl_setopt($this->curl, CURLOPT_PROXY, $this->options['proxy_host']);
+                curl_setopt($this->curl, CURLOPT_PROXYPORT, $this->options['proxy_port']);
+            }
 
             $this->clearResults();
         }
