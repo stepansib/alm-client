@@ -16,6 +16,7 @@
     "require": {
         "lib-curl": "*",
         "ext-curl": "*",
+        "ext-simplexml": "*",
         "symfony/options-resolver": "^3"
     }
 }
