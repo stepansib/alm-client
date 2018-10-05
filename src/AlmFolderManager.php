@@ -8,7 +8,7 @@ namespace StepanSib\AlmClient;
 
 use StepanSib\AlmClient\Exception\AlmEntityParametersManagerException;
 
-class AlmEntityFolder
+class AlmFolderManager
 {
 
     /** @var AlmCurl */
@@ -33,10 +33,10 @@ class AlmEntityFolder
 
 
     /**
-     * @param null|string $type
+     * @param string $type
      * @return mixed
      */
-    public function getFolders($type = null)
+    public function getFolders($type)
     {
         if (null === $this->folders) {
             try {

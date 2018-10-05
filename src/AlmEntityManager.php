@@ -35,6 +35,9 @@ class AlmEntityManager
     /** @var AlmEntityParametersManager */
     protected $parametersManager;
 
+    /** @var AlmFolderManager */
+    protected $folderManager;
+
     /**
      * AlmEntityManager constructor.
      * @param AlmCurl $curl
@@ -47,6 +50,7 @@ class AlmEntityManager
         $this->entityExtractor = new AlmEntityExtractor(array());
         $this->entityLocker = new AlmEntityLocker($this->curl, $this->routes);
         $this->parametersManager = new AlmEntityParametersManager($this->curl, $this->routes);
+        $this->folderManager = new AlmFolderManager($this->curl, $this->routes);
     }
 
     /**
@@ -73,6 +77,13 @@ class AlmEntityManager
         return $this->parametersManager;
     }
 
+    /**
+     * @return AlmFolderManager
+     */
+    public function getFoldersManager()
+    {
+        return $this->folderManager;
+    }
 
     /**
      * @param $entityType
