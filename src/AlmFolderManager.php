@@ -35,11 +35,12 @@ class AlmFolderManager
      * @param string $type
      * @param int $start
      * @param int $pageSize
+     * @param bool $refresh force download
      * @return mixed
      */
-    public function getFolders($type, $start = 1, $pageSize = 500)
+    public function getFolders($type, $start = 1, $pageSize = 500, $refresh = false)
     {
-        if (null === $this->folders) {
+        if (null === $this->folders || $refresh !== false) {
             try {
                 $this->refreshFolders($type, $start, $pageSize);
             } catch (Exception\AlmCurlException $e) {
