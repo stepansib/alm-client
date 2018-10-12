@@ -42,7 +42,7 @@ class AlmAttachmentManager
         if ($this->attachments === null || $refresh !== false)
         {
             try {
-                $this->refreshFolders($entityId, $entityType);
+                $this->refreshAttachments($entityId, $entityType);
             } catch (Exception\AlmCurlException $e) {
             } catch (AlmEntityParametersManagerException $e) {
             } catch (Exception\AlmException $e) {
@@ -55,11 +55,34 @@ class AlmAttachmentManager
     /**
      * @param int $entityId entity id
      * @param string $entityType entity type
+     * @param string $path path to save the file
+     * @param string $filename file name
+     * @return null|string
+     * @throws Exception\AlmCurlException
+     * @throws Exception\AlmException
+     */
+    public function downloadAttachment($entityId, $entityType, $path, $filename)
+    {
+        $file = fopen($path . $filename, 'w+');
+        $this
+            ->curl
+            ->setDownload($file)
+            ->setHeaders(['Accept: application/octet-stream'])
+            ->exec($this->routes->getAttachmentsDownloadUrl($entityId, $entityType, $filename));
+
+        fclose($file);
+
+        return $this->curl->getResult();
+    }
+
+    /**
+     * @param int $entityId entity id
+     * @param string $entityType entity type
      * @throws AlmEntityParametersManagerException
      * @throws Exception\AlmCurlException
      * @throws Exception\AlmException
      */
-    protected function refreshFolders($entityId, $entityType)
+    protected function refreshAttachments($entityId, $entityType)
     {
         $this->curl->exec($this->routes->getAttachmentsUrl($entityId, $entityType));
         $xml = simplexml_load_string($this->curl->getResult());
@@ -68,6 +91,9 @@ class AlmAttachmentManager
             throw new AlmEntityParametersManagerException('Cannot get lists data');
         }
 
-        $this->attachments = $xml;
+        $extractor = new AlmEntityExtractor();
+        foreach ($xml->Entity as $entity){
+            $this->attachments[] = $extractor->extract($entity);
+        }
     }
 }

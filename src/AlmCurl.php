@@ -113,6 +113,16 @@ Class AlmCurl
         return $this;
     }
 
+    public function setDownload($resource, $body = null)
+    {
+        $this->curlInit();
+
+        curl_setopt($this->curl, CURLOPT_FILE, $resource);
+        curl_setopt($this->curl, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($this->curl, CURLOPT_POSTFIELDS, $body);
+
+        return $this;
+    }
 
     /**
      * @param $url
@@ -122,7 +132,6 @@ Class AlmCurl
      */
     public function exec($url)
     {
-
         $this->curlInit();
 
         curl_setopt($this->curl, CURLOPT_URL, $url);

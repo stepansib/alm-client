@@ -130,12 +130,33 @@ class AlmRoutes
     public function getAttachmentsUrl($entityId, $entityType)
     {
         return sprintf(
-            '%s/qcbin/rest/domains/%s/projects/%s/%d/attachments',
+            '%s/qcbin/rest/domains/%s/projects/%s/%s/%d/attachments',
             $this->host,
             $this->domain,
             $this->project,
             $entityType,
             $entityId
+        );
+    }
+
+    /**
+     * Get attachments download URL
+     *
+     * @param int $entityId Entity ID
+     * @param string $entityType Entity type
+     * @param string $filename attachment file name
+     * @return string
+     */
+    public function getAttachmentsDownloadUrl($entityId, $entityType, $filename)
+    {
+        return sprintf(
+            '%s/qcbin/rest/domains/%s/projects/%s/%s/%d/attachments/%s',
+            $this->host,
+            $this->domain,
+            $this->project,
+            $entityType,
+            $entityId,
+            $filename
         );
     }
 
