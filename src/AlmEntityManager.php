@@ -19,6 +19,7 @@ class AlmEntityManager
     const ENTITY_TYPE_REQUIREMENT = 'requirement';
     const ENTITY_TYPE_RESOURCE = 'resource';
     const ENTITY_TYPE_DEFECT = 'defect';
+    const ENTITY_TYPE_DESIGN_STEP = 'design-step';
 
     /** @var AlmCurl */
     protected $curl;
@@ -38,6 +39,9 @@ class AlmEntityManager
     /** @var AlmFolderManager */
     protected $folderManager;
 
+    /** @var AlmAttachmentManager */
+    protected $attachmentsManager;
+
     /**
      * AlmEntityManager constructor.
      * @param AlmCurl $curl
@@ -47,10 +51,11 @@ class AlmEntityManager
     {
         $this->routes = $routes;
         $this->curl = $curl;
-        $this->entityExtractor = new AlmEntityExtractor(array());
-        $this->entityLocker = new AlmEntityLocker($this->curl, $this->routes);
-        $this->parametersManager = new AlmEntityParametersManager($this->curl, $this->routes);
-        $this->folderManager = new AlmFolderManager($this->curl, $this->routes);
+        $this->entityExtractor = null;
+        $this->entityLocker = null;
+        $this->parametersManager = null;
+        $this->folderManager = null;
+        $this->attachmentsManager = null;
     }
 
     /**
@@ -58,6 +63,9 @@ class AlmEntityManager
      */
     public function getEntityExtractor()
     {
+        if ($this->entityExtractor === null || !($this->entityExtractor instanceof AlmEntityExtractor)){
+            $this->entityExtractor = new AlmEntityExtractor([]);
+        }
         return $this->entityExtractor;
     }
 
@@ -66,6 +74,10 @@ class AlmEntityManager
      */
     public function getEntityLocker()
     {
+        if ($this->entityLocker === null || !($this->entityLocker instanceof AlmEntityLocker)){
+            $this->entityLocker = new AlmEntityLocker($this->curl, $this->routes);
+        }
+
         return $this->entityLocker;
     }
 
@@ -74,6 +86,10 @@ class AlmEntityManager
      */
     public function getParametersManager()
     {
+        if ($this->parametersManager === null || !($this->parametersManager instanceof  AlmEntityParametersManager)){
+            $this->parametersManager = new AlmEntityParametersManager($this->curl, $this->routes);
+        }
+
         return $this->parametersManager;
     }
 
@@ -82,7 +98,23 @@ class AlmEntityManager
      */
     public function getFoldersManager()
     {
+        if ($this->folderManager === null || !($this->folderManager instanceof AlmFolderManager)){
+            $this->folderManager = new AlmFolderManager($this->curl, $this->routes);
+        }
+
         return $this->folderManager;
+    }
+
+    /**
+     * @return AlmAttachmentManager
+     */
+    public function getAttachmentManager()
+    {
+        if ($this->attachmentsManager === null || !($this->attachmentsManager instanceof AlmAttachmentManager)){
+            $this->attachmentsManager = new AlmAttachmentManager($this->curl, $this->routes);
+        }
+
+        return $this->attachmentsManager;
     }
 
     /**
@@ -100,6 +132,8 @@ class AlmEntityManager
      * @param array $criteria
      * @return AlmEntity
      * @throws AlmEntityManagerException
+     * @throws Exception\AlmCurlException
+     * @throws Exception\AlmException
      */
     public function getOneBy($entityType, array $criteria)
     {
@@ -180,6 +214,7 @@ class AlmEntityManager
      * @throws AlmEntityManagerException
      * @throws Exception\AlmCurlException
      * @throws Exception\AlmException
+     * @throws Exception\AlmEntityParametersManagerException
      */
     public function save(AlmEntity $entity)
     {
@@ -251,6 +286,4 @@ class AlmEntityManager
         }
         return false;
     }
-
-
 }

@@ -1,16 +1,15 @@
 <?php
 /**
  * @author Bogdan SOOS <bogdan.soos@dynweb.org>.
- * @created 10/5/18 3:22 PM
+ * @created 10/11/18 5:12 PM
  * @version 1.0
  */
 namespace StepanSib\AlmClient;
 
 use StepanSib\AlmClient\Exception\AlmEntityParametersManagerException;
 
-class AlmFolderManager
+class AlmAttachmentManager
 {
-
     /** @var AlmCurl */
     protected $curl;
 
@@ -18,12 +17,13 @@ class AlmFolderManager
     protected $routes;
 
     /** @var \SimpleXMLElement */
-    protected $folders;
+    protected $attachments = null;
 
     /**
-     * AlmEntityLocker constructor.
-     * @param AlmCurl $curl
-     * @param AlmRoutes $routes
+     * AlmAttachmentManager constructor.
+     *
+     * @param AlmCurl $curl curl client
+     * @param AlmRoutes $routes routes object
      */
     public function __construct(AlmCurl $curl, AlmRoutes $routes)
     {
@@ -32,43 +32,42 @@ class AlmFolderManager
     }
 
     /**
-     * @param string $type
-     * @param int $start
-     * @param int $pageSize
-     * @return mixed
+     * @param int $entityId entity id
+     * @param string $entityType entity type
+     * @param bool $refresh force download
+     * @return null|\SimpleXMLElement
      */
-    public function getFolders($type, $start = 1, $pageSize = 500)
+    public function getAttachments($entityId, $entityType, $refresh = false)
     {
-        if (null === $this->folders) {
+        if ($this->attachments === null || $refresh !== false)
+        {
             try {
-                $this->refreshFolders($type, $start, $pageSize);
+                $this->refreshFolders($entityId, $entityType);
             } catch (Exception\AlmCurlException $e) {
             } catch (AlmEntityParametersManagerException $e) {
             } catch (Exception\AlmException $e) {
             }
         }
 
-        return $this->folders;
+        return $this->attachments;
     }
 
-
     /**
-     * @param string $type folder type test-folders|test-set-folders
-     * @param int $start
-     * @param int $pageSize
+     * @param int $entityId entity id
+     * @param string $entityType entity type
      * @throws AlmEntityParametersManagerException
      * @throws Exception\AlmCurlException
      * @throws Exception\AlmException
      */
-    protected function refreshFolders($type, $start = 1, $pageSize = 500)
+    protected function refreshFolders($entityId, $entityType)
     {
-        $this->curl->exec($this->routes->getFoldersUrl($type, $start, $pageSize));
+        $this->curl->exec($this->routes->getAttachmentsUrl($entityId, $entityType));
         $xml = simplexml_load_string($this->curl->getResult());
 
         if (false === $xml) {
             throw new AlmEntityParametersManagerException('Cannot get lists data');
         }
 
-        $this->folders = $xml;
+        $this->attachments = $xml;
     }
 }

@@ -10,13 +10,27 @@ namespace StepanSib\AlmClient;
 
 class AlmRoutes
 {
-
+    /**
+     * @var string
+     */
     protected $host;
 
+    /**
+     * @var string
+     */
     protected $domain;
 
+    /**
+     * @var string
+     */
     protected $project;
 
+    /**
+     * AlmRoutes constructor.
+     * @param string $host API host
+     * @param string $domain project domain
+     * @param string $project project name
+     */
     public function __construct($host, $domain, $project)
     {
         $this->host = $host;
@@ -84,9 +98,59 @@ class AlmRoutes
         return $url;
     }
 
+    /**
+     * Get folders URL.
+     *
+     * @param string $folderType folder type
+     * @param int $start start page
+     * @param int $pageSize page size
+     * @return string
+     */
     public function getFoldersUrl($folderType, $start = 1, $pageSize = 500)
     {
-        $url = $this->host . '/qcbin/rest/domains/' . $this->domain . '/projects/' . $this->project . '/' . $folderType . '?page-size=' . $pageSize . '&start-index=' . $start;
-        return $url;
+        return sprintf(
+            '%s/qcbin/rest/domains/%s/projects/%s/%s?page-size=%d&start-index=%d',
+            $this->host,
+            $this->domain,
+            $this->project,
+            $folderType,
+            $pageSize,
+            $start
+        );
+    }
+
+    /**
+     * Get attachments URL
+     *
+     * @param int $entityId Entity ID
+     * @param string $entityType Entity type
+     *
+     * @return string
+     */
+    public function getAttachmentsUrl($entityId, $entityType)
+    {
+        return sprintf(
+            '%s/qcbin/rest/domains/%s/projects/%s/%d/attachments',
+            $this->host,
+            $this->domain,
+            $this->project,
+            $entityType,
+            $entityId
+        );
+    }
+
+    /**
+     * Get design steps URL
+     *
+     * @return string
+     */
+    public function getDesignStepsUrl()
+    {
+        return sprintf(
+            '%s/qcbin/rest/domains/%s/projects/%s/design-steps',
+            $this->host,
+            $this->domain,
+            $this->project
+        );
     }
 }
