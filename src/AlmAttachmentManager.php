@@ -61,14 +61,14 @@ class AlmAttachmentManager
      * @throws Exception\AlmCurlException
      * @throws Exception\AlmException
      */
-    public function downloadAttachment($entityId, $entityType, $path, $filename)
+    public function downloadAttachment($entityId, $entityType, $path, $filename, $attachementId)
     {
         $file = fopen($path . $filename, 'w+');
         $this
             ->curl
             ->setDownload($file)
             ->setHeaders(['Accept: application/octet-stream'])
-            ->exec($this->routes->getAttachmentsDownloadUrl($entityId, $entityType, $filename));
+            ->exec($this->routes->getAttachmentsDownloadUrl($entityId, $entityType, $attachementId));
 
         fclose($file);
 

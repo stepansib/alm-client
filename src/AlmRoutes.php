@@ -142,21 +142,17 @@ class AlmRoutes
     /**
      * Get attachments download URL
      *
-     * @param int $entityId Entity ID
-     * @param string $entityType Entity type
-     * @param string $filename attachment file name
+     * @param int $fileId attachment file name
      * @return string
      */
-    public function getAttachmentsDownloadUrl($entityId, $entityType, $filename)
+    public function getAttachmentsDownloadUrl($fileId)
     {
         return sprintf(
-            '%s/qcbin/rest/domains/%s/projects/%s/%s/%d/attachments/%s',
+            '%s/qcbin/rest/domains/%s/projects/%s/attachments/%d',
             $this->host,
             $this->domain,
             $this->project,
-            $entityType,
-            $entityId,
-            $filename
+            $fileId
         );
     }
 
