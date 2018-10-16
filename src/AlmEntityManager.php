@@ -181,7 +181,7 @@ class AlmEntityManager
 
                 $resultArray = array();
                 foreach ($xml->Entity as $entity) {
-                    array_push($resultArray, $this->entityExtractor->extract($entity));
+                    array_push($resultArray, $this->getEntityExtractor()->extract($entity));
                 }
 
                 return $resultArray;
@@ -225,7 +225,7 @@ class AlmEntityManager
         );
 
         if ($entity->isNew()) {
-            $entityXml = $this->entityExtractor->pack($entity);
+            $entityXml = $this->getEntityExtractor()->pack($entity);
 
             array_push($headers, 'POST /HTTP/1.1');
 
@@ -237,14 +237,14 @@ class AlmEntityManager
 
         } else {
 
-            $entityXml = $this->entityExtractor->pack($entity, $this->parametersManager->getEntityEditableParameters($entity));
+            $entityXml = $this->getEntityExtractor()->pack($entity, $this->getParametersManager()->getEntityEditableParameters($entity));
 
-            if ($this->entityLocker->isEntityLocked($entity)) {
-                if (!$this->entityLocker->isEntityLockedByMe($entity)) {
+            if ($this->getEntityLocker()->isEntityLocked($entity)) {
+                if (!$this->getEntityLocker()->isEntityLockedByMe($entity)) {
                     throw new AlmEntityManagerException('Entity is locked by someone');
                 }
             } else {
-                $this->entityLocker->lockEntity($entity);
+                $this->getEntityLocker()->lockEntity($entity);
             }
 
             if ($this->isEntityVersioning($entity)) {
@@ -263,11 +263,11 @@ class AlmEntityManager
                 $this->getEntityLocker()->checkInEntity($entity);
             }
 
-            $this->entityLocker->unlockEntity($entity);
+            $this->getEntityLocker()->unlockEntity($entity);
 
         }
 
-        return $this->entityExtractor->extract($xml);
+        return $this->getEntityExtractor()->extract($xml);
 
     }
 
