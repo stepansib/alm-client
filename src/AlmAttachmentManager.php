@@ -16,7 +16,7 @@ class AlmAttachmentManager
     /** @var AlmRoutes */
     protected $routes;
 
-    /** @var \SimpleXMLElement */
+    /** @var AlmEntity[] */
     protected $attachments = null;
 
     /**
@@ -35,7 +35,7 @@ class AlmAttachmentManager
      * @param int $entityId entity id
      * @param string $entityType entity type
      * @param bool $refresh force download
-     * @return null|\SimpleXMLElement
+     * @return null|AlmEntity[]
      */
     public function getAttachments($entityId, $entityType, $refresh = false)
     {
@@ -53,22 +53,20 @@ class AlmAttachmentManager
     }
 
     /**
-     * @param int $entityId entity id
-     * @param string $entityType entity type
      * @param string $path path to save the file
      * @param string $filename file name
      * @return null|string
      * @throws Exception\AlmCurlException
      * @throws Exception\AlmException
      */
-    public function downloadAttachment($entityId, $entityType, $path, $filename, $attachementId)
+    public function downloadAttachment($path, $filename, $attachementId)
     {
         $file = fopen($path . $filename, 'w+');
         $this
             ->curl
             ->setDownload($file)
             ->setHeaders(['Accept: application/octet-stream'])
-            ->exec($this->routes->getAttachmentsDownloadUrl($entityId, $entityType, $attachementId));
+            ->exec($this->routes->getAttachmentsDownloadUrl($attachementId));
 
         fclose($file);
 
