@@ -161,13 +161,30 @@ class AlmRoutes
      *
      * @return string
      */
-    public function getDesignStepsUrl()
+    public function getDesignStepsUrl(): string
     {
         return sprintf(
             '%s/qcbin/rest/domains/%s/projects/%s/design-steps',
             $this->host,
             $this->domain,
             $this->project
+        );
+    }
+
+    /**
+     * Get run steps URL
+     *
+     * @param int $runId Run for which we need to get steps
+     * @return string
+     */
+    public function getRunStepsUrl($runId): string
+    {
+        return sprintf(
+            '%s/qcbin/rest/domains/%s/projects/%s/runs/%d/run-steps',
+            $this->host,
+            $this->domain,
+            $this->project,
+            $runId
         );
     }
 }

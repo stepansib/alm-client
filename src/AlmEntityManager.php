@@ -20,6 +20,8 @@ class AlmEntityManager
     const ENTITY_TYPE_RESOURCE = 'resource';
     const ENTITY_TYPE_DEFECT = 'defect';
     const ENTITY_TYPE_DESIGN_STEP = 'design-step';
+    const ENTITY_TYPE_TEST_SET = 'test-set';
+    const ENTITY_TYPE_RUN = 'runs';
 
     /** @var AlmCurl */
     protected $curl;
