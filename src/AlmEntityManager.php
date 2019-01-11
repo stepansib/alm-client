@@ -21,6 +21,7 @@ class AlmEntityManager
     const ENTITY_TYPE_DEFECT = 'defect';
     const ENTITY_TYPE_DESIGN_STEP = 'design-step';
     const ENTITY_TYPE_TEST_SET = 'test-set';
+    const ENTITY_TYPE_TEST_INSTANCE = 'test-instance';
     const ENTITY_TYPE_RUN = 'run';
     const ENTITY_TYPE_RUN_STEPS= 'run-step';
 
