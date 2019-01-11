@@ -21,7 +21,8 @@ class AlmEntityManager
     const ENTITY_TYPE_DEFECT = 'defect';
     const ENTITY_TYPE_DESIGN_STEP = 'design-step';
     const ENTITY_TYPE_TEST_SET = 'test-set';
-    const ENTITY_TYPE_RUN = 'runs';
+    const ENTITY_TYPE_RUN = 'run';
+    const ENTITY_TYPE_RUN_STEPS= 'run-step';
 
     /** @var AlmCurl */
     protected $curl;
@@ -38,7 +39,7 @@ class AlmEntityManager
     /** @var AlmEntityParametersManager */
     protected $parametersManager;
 
-    /** @var AlmFolderManager */
+    /** @var AlmRunStepsManager */
     protected $folderManager;
 
     /** @var AlmAttachmentManager */
@@ -96,12 +97,12 @@ class AlmEntityManager
     }
 
     /**
-     * @return AlmFolderManager
+     * @return AlmRunStepsManager
      */
     public function getFoldersManager()
     {
-        if ($this->folderManager === null || !($this->folderManager instanceof AlmFolderManager)){
-            $this->folderManager = new AlmFolderManager($this->curl, $this->routes);
+        if ($this->folderManager === null || !($this->folderManager instanceof AlmRunStepsManager)){
+            $this->folderManager = new AlmRunStepsManager($this->curl, $this->routes);
         }
 
         return $this->folderManager;

@@ -12,8 +12,8 @@ require 'header_xml.php';
 use StepanSib\AlmClient\AlmClient;
 
 $almClient = new AlmClient($connectionParams);
-echo $almClient->getManager()->getFoldersManager()->getFolders('test-folders')->asXML();
+echo $almClient->getManager()->getFoldersManager()->getRunSteps('test-folders')->asXML();
 
 
 $almClient = new AlmClient($connectionParams);
-echo $almClient->getManager()->getFoldersManager()->getFolders('test-set-folders')->asXML();
+echo $almClient->getManager()->getFoldersManager()->getRunSteps('test-set-folders')->asXML();
