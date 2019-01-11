@@ -34,53 +34,12 @@ class AlmAttachmentManager
     /**
      * @param int $entityId entity id
      * @param string $entityType entity type
-     * @param bool $refresh force download
-     * @return null|AlmEntity[]
-     */
-    public function getAttachments($entityId, $entityType, $refresh = false)
-    {
-        if ($this->attachments === null || $refresh !== false)
-        {
-            try {
-                $this->refreshAttachments($entityId, $entityType);
-            } catch (Exception\AlmCurlException $e) {
-            } catch (AlmEntityParametersManagerException $e) {
-            } catch (Exception\AlmException $e) {
-            }
-        }
-
-        return $this->attachments;
-    }
-
-    /**
-     * @param string $path path to save the file
-     * @param string $filename file name
-     * @return null|string
-     * @throws Exception\AlmCurlException
-     * @throws Exception\AlmException
-     */
-    public function downloadAttachment($path, $filename, $attachementId)
-    {
-        $file = fopen($path . $filename, 'w+');
-        $this
-            ->curl
-            ->setDownload($file)
-            ->setHeaders(['Accept: application/octet-stream'])
-            ->exec($this->routes->getAttachmentsDownloadUrl($attachementId));
-
-        fclose($file);
-
-        return $this->curl->getResult();
-    }
-
-    /**
-     * @param int $entityId entity id
-     * @param string $entityType entity type
+     * @return void
      * @throws AlmEntityParametersManagerException
      * @throws Exception\AlmCurlException
      * @throws Exception\AlmException
      */
-    protected function refreshAttachments($entityId, $entityType)
+    public function getAttachments($entityId, $entityType)
     {
         $this->curl->exec($this->routes->getAttachmentsUrl($entityId, $entityType));
         $xml = simplexml_load_string($this->curl->getResult());
@@ -93,5 +52,27 @@ class AlmAttachmentManager
         foreach ($xml->Entity as $entity){
             $this->attachments[] = $extractor->extract($entity);
         }
+    }
+
+    /**
+     * @param string $path path to save the file
+     * @param string $filename file name
+     * @param int $attachmentId attachment id
+     * @return null|string
+     * @throws Exception\AlmCurlException
+     * @throws Exception\AlmException
+     */
+    public function downloadAttachment($path, $filename, $attachmentId)
+    {
+        $file = fopen($path . $filename, 'w+');
+        $this
+            ->curl
+            ->setDownload($file)
+            ->setHeaders(['Accept: application/octet-stream'])
+            ->exec($this->routes->getAttachmentsDownloadUrl($attachmentId));
+
+        fclose($file);
+
+        return $this->curl->getResult();
     }
 }
