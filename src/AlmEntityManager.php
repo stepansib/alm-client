@@ -45,6 +45,9 @@ class AlmEntityManager
     /** @var AlmAttachmentManager */
     protected $attachmentsManager;
 
+    /** @var AlmRunStepsManager */
+    protected $runStepsManager;
+
     /**
      * AlmEntityManager constructor.
      * @param AlmCurl $curl
@@ -59,6 +62,7 @@ class AlmEntityManager
         $this->parametersManager = null;
         $this->folderManager = null;
         $this->attachmentsManager = null;
+        $this->runStepsManager = null;
     }
 
     /**
@@ -118,6 +122,18 @@ class AlmEntityManager
         }
 
         return $this->attachmentsManager;
+    }
+
+    /**
+     * @return AlmRunStepsManager
+     */
+    public function getRunStepsManager()
+    {
+        if ($this->runStepsManager === null || !($this->runStepsManager instanceof AlmRunStepsManager)){
+            $this->runStepsManager = new AlmRunStepsManager($this->curl, $this->routes);
+        }
+
+        return $this->runStepsManager;
     }
 
     /**
