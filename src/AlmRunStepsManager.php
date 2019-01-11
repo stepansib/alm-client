@@ -70,6 +70,9 @@ class AlmRunStepsManager
             throw new AlmEntityParametersManagerException('Cannot get lists data');
         }
 
-        $this->steps = $xml;
+        $extractor = new AlmEntityExtractor();
+        foreach ($xml->Entity as $entity){
+            $this->steps[] = $extractor->extract($entity);
+        }
     }
 }
