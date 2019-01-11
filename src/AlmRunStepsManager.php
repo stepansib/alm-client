@@ -35,44 +35,27 @@ class AlmRunStepsManager
      * @param int $runId
      * @param int $start
      * @param int $pageSize
-     * @param bool $refresh force download
      * @return mixed
      */
-    public function getRunSteps($runId, $start = 1, $pageSize = 2000, $refresh = false)
+    public function getRunSteps($runId, $start = 1, $pageSize = 2000)
     {
-        if (null === $this->steps || $refresh !== false) {
-            try {
-                $this->refreshSteps($runId, $start, $pageSize);
-            } catch (Exception\AlmCurlException $e) {
-            } catch (AlmEntityParametersManagerException $e) {
-            } catch (Exception\AlmException $e) {
+        try {
+            $this->curl->exec($this->routes->getRunStepsUrl($runId, $start, $pageSize));
+            $xml = simplexml_load_string($this->curl->getResult());
+
+            if (false === $xml) {
+                throw new AlmEntityParametersManagerException('Cannot get lists data');
             }
+
+            $extractor = new AlmEntityExtractor();
+            foreach ($xml->Entity as $entity){
+                $this->steps[] = $extractor->extract($entity);
+            }
+        } catch (Exception\AlmCurlException $e) {
+        } catch (AlmEntityParametersManagerException $e) {
+        } catch (Exception\AlmException $e) {
         }
 
         return $this->steps;
-    }
-
-
-    /**
-     * @param int $runId RUN ID
-     * @param int $start
-     * @param int $pageSize
-     * @throws AlmEntityParametersManagerException
-     * @throws Exception\AlmCurlException
-     * @throws Exception\AlmException
-     */
-    protected function refreshSteps($runId, $start = 1, $pageSize = 2000)
-    {
-        $this->curl->exec($this->routes->getRunStepsUrl($runId, $start, $pageSize));
-        $xml = simplexml_load_string($this->curl->getResult());
-
-        if (false === $xml) {
-            throw new AlmEntityParametersManagerException('Cannot get lists data');
-        }
-
-        $extractor = new AlmEntityExtractor();
-        foreach ($xml->Entity as $entity){
-            $this->steps[] = $extractor->extract($entity);
-        }
     }
 }
