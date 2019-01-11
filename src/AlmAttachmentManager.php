@@ -34,12 +34,12 @@ class AlmAttachmentManager
     /**
      * @param int $entityId entity id
      * @param string $entityType entity type
-     * @return void
+     * @return AlmEntity[]
      * @throws AlmEntityParametersManagerException
      * @throws Exception\AlmCurlException
      * @throws Exception\AlmException
      */
-    public function getAttachments($entityId, $entityType)
+    public function getAttachments($entityId, $entityType): array
     {
         $this->curl->exec($this->routes->getAttachmentsUrl($entityId, $entityType));
         $xml = simplexml_load_string($this->curl->getResult());
@@ -52,6 +52,8 @@ class AlmAttachmentManager
         foreach ($xml->Entity as $entity){
             $this->attachments[] = $extractor->extract($entity);
         }
+
+        return $this->attachments;
     }
 
     /**
