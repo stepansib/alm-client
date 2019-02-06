@@ -41,10 +41,13 @@ class AlmAttachmentManager
      */
     public function getAttachments($entityId, $entityType): array
     {
-        $this->curl->exec($this->routes->getAttachmentsUrl($entityId, $entityType));
-        $xml = simplexml_load_string($this->curl->getResult());
+        $this->attachments = [];
+        try {
+            $this->curl->exec($this->routes->getAttachmentsUrl($entityId, $entityType));
+            $xml = simplexml_load_string($this->curl->getResult());
+        } catch (\Exception $e){}
 
-        if (false === $xml) {
+        if (!$xml) {
             throw new AlmEntityParametersManagerException('Cannot get lists data');
         }
 

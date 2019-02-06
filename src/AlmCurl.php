@@ -44,8 +44,6 @@ Class AlmCurl
     {
         $this->cookieStorage = $cookieStorage;
         $this->options = $options;
-
-        return $this;
     }
 
     /**
@@ -58,8 +56,8 @@ Class AlmCurl
             curl_setopt($this->curl, CURLOPT_HEADER, 0);
             curl_setopt($this->curl, CURLOPT_HTTPGET, 1);
             curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT, 10); //connection timeout
-            curl_setopt($this->curl, CURLOPT_TIMEOUT, 30); //overall timeout
+            curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT, 300); //connection timeout
+            curl_setopt($this->curl, CURLOPT_TIMEOUT, 500); //overall timeout
             curl_setopt($this->curl, CURLOPT_HTTPGET, true);
 
             if (!empty($this->options['proxy_host']) && !empty($this->options['proxy_port'])){
