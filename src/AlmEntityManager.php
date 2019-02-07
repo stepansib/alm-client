@@ -102,12 +102,12 @@ class AlmEntityManager
     }
 
     /**
-     * @return AlmRunStepsManager
+     * @return AlmFolderManager
      */
-    public function getFoldersManager()
+    public function getFoldersManager(): AlmRunStepsManager
     {
-        if ($this->folderManager === null || !($this->folderManager instanceof AlmRunStepsManager)){
-            $this->folderManager = new AlmRunStepsManager($this->curl, $this->routes);
+        if ($this->folderManager === null || !($this->folderManager instanceof AlmFolderManager)){
+            $this->folderManager = new AlmFolderManager($this->curl, $this->routes);
         }
 
         return $this->folderManager;
@@ -116,7 +116,7 @@ class AlmEntityManager
     /**
      * @return AlmAttachmentManager
      */
-    public function getAttachmentManager()
+    public function getAttachmentManager(): AlmAttachmentManager
     {
         if ($this->attachmentsManager === null || !($this->attachmentsManager instanceof AlmAttachmentManager)){
             $this->attachmentsManager = new AlmAttachmentManager($this->curl, $this->routes);
