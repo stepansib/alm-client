@@ -104,7 +104,7 @@ class AlmEntityManager
     /**
      * @return AlmFolderManager
      */
-    public function getFoldersManager(): AlmRunStepsManager
+    public function getFoldersManager(): AlmFolderManager
     {
         if ($this->folderManager === null || !($this->folderManager instanceof AlmFolderManager)){
             $this->folderManager = new AlmFolderManager($this->curl, $this->routes);
