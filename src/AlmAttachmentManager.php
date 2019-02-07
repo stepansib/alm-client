@@ -39,7 +39,7 @@ class AlmAttachmentManager
      * @throws Exception\AlmCurlException
      * @throws Exception\AlmException
      */
-    public function getAttachments($entityId, $entityType): array
+    public function getAttachments($entityId, $entityType): ?array
     {
         $this->attachments = [];
         try {
