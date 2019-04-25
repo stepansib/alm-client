@@ -46,9 +46,7 @@ class AlmEntityExtractor
 
         $entityXml = $entityXml->Fields[0];
         foreach ($entityXml->Field as $field) {
-            if (trim((string)$field->Value[0]) !== '') {
-                $entity->setParameter((string)$field->attributes()->Name, $field->Value[0], false);
-            }
+            $entity->setParameter((string)$field->attributes()->Name, $field->Value[0], false);
         }
 
         return $entity;

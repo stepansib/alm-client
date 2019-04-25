@@ -33,14 +33,17 @@ Class AlmCurl
     /** @var AlmCurlCookieStorage */
     protected $cookieStorage;
 
+    /** @var array */
+    protected $options;
     /**
      * AlmCurl constructor.
      * @param AlmCurlCookieStorage $cookieStorage
+     * @param array $options
      */
-    public function __construct(AlmCurlCookieStorage $cookieStorage)
+    public function __construct(AlmCurlCookieStorage $cookieStorage, $options = [])
     {
         $this->cookieStorage = $cookieStorage;
-        return $this;
+        $this->options = $options;
     }
 
     /**
@@ -53,8 +56,14 @@ Class AlmCurl
             curl_setopt($this->curl, CURLOPT_HEADER, 0);
             curl_setopt($this->curl, CURLOPT_HTTPGET, 1);
             curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT, 10); //connection timeout
-            curl_setopt($this->curl, CURLOPT_TIMEOUT, 30); //overall timeout
+            curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT, 300); //connection timeout
+            curl_setopt($this->curl, CURLOPT_TIMEOUT, 500); //overall timeout
+            curl_setopt($this->curl, CURLOPT_HTTPGET, true);
+
+            if (!empty($this->options['proxy_host']) && !empty($this->options['proxy_port'])){
+                curl_setopt($this->curl, CURLOPT_PROXY, $this->options['proxy_host']);
+                curl_setopt($this->curl, CURLOPT_PROXYPORT, $this->options['proxy_port']);
+            }
 
             $this->clearResults();
         }
@@ -77,8 +86,8 @@ Class AlmCurl
     {
         $this->curlInit();
 
-        curl_setopt($this->curl, CURLOPT_POST, 1);
-        curl_setopt($this->curl, CURLOPT_POSTFIELDS, $body);
+//        curl_setopt($this->curl, CURLOPT_POST, 1);
+//        curl_setopt($this->curl, CURLOPT_POSTFIELDS, $body);
 
         return $this;
     }
@@ -103,6 +112,16 @@ Class AlmCurl
         return $this;
     }
 
+    public function setDownload($resource, $body = null)
+    {
+        $this->curlInit();
+
+        curl_setopt($this->curl, CURLOPT_FILE, $resource);
+//        curl_setopt($this->curl, CURLOPT_FOLLOWLOCATION, true);
+//        curl_setopt($this->curl, CURLOPT_POSTFIELDS, $body);
+
+        return $this;
+    }
 
     /**
      * @param $url
@@ -112,7 +131,6 @@ Class AlmCurl
      */
     public function exec($url)
     {
-
         $this->curlInit();
 
         curl_setopt($this->curl, CURLOPT_URL, $url);

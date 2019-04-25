@@ -19,6 +19,11 @@ class AlmEntityManager
     const ENTITY_TYPE_REQUIREMENT = 'requirement';
     const ENTITY_TYPE_RESOURCE = 'resource';
     const ENTITY_TYPE_DEFECT = 'defect';
+    const ENTITY_TYPE_DESIGN_STEP = 'design-step';
+    const ENTITY_TYPE_TEST_SET = 'test-set';
+    const ENTITY_TYPE_TEST_INSTANCE = 'test-instance';
+    const ENTITY_TYPE_RUN = 'run';
+    const ENTITY_TYPE_RUN_STEPS= 'run-step';
 
     /** @var AlmCurl */
     protected $curl;
@@ -35,6 +40,15 @@ class AlmEntityManager
     /** @var AlmEntityParametersManager */
     protected $parametersManager;
 
+    /** @var AlmRunStepsManager */
+    protected $folderManager;
+
+    /** @var AlmAttachmentManager */
+    protected $attachmentsManager;
+
+    /** @var AlmRunStepsManager */
+    protected $runStepsManager;
+
     /**
      * AlmEntityManager constructor.
      * @param AlmCurl $curl
@@ -44,9 +58,12 @@ class AlmEntityManager
     {
         $this->routes = $routes;
         $this->curl = $curl;
-        $this->entityExtractor = new AlmEntityExtractor(array());
-        $this->entityLocker = new AlmEntityLocker($this->curl, $this->routes);
-        $this->parametersManager = new AlmEntityParametersManager($this->curl, $this->routes);
+        $this->entityExtractor = null;
+        $this->entityLocker = null;
+        $this->parametersManager = null;
+        $this->folderManager = null;
+        $this->attachmentsManager = null;
+        $this->runStepsManager = null;
     }
 
     /**
@@ -54,6 +71,9 @@ class AlmEntityManager
      */
     public function getEntityExtractor()
     {
+        if ($this->entityExtractor === null || !($this->entityExtractor instanceof AlmEntityExtractor)){
+            $this->entityExtractor = new AlmEntityExtractor([]);
+        }
         return $this->entityExtractor;
     }
 
@@ -62,6 +82,10 @@ class AlmEntityManager
      */
     public function getEntityLocker()
     {
+        if ($this->entityLocker === null || !($this->entityLocker instanceof AlmEntityLocker)){
+            $this->entityLocker = new AlmEntityLocker($this->curl, $this->routes);
+        }
+
         return $this->entityLocker;
     }
 
@@ -70,9 +94,48 @@ class AlmEntityManager
      */
     public function getParametersManager()
     {
+        if ($this->parametersManager === null || !($this->parametersManager instanceof  AlmEntityParametersManager)){
+            $this->parametersManager = new AlmEntityParametersManager($this->curl, $this->routes);
+        }
+
         return $this->parametersManager;
     }
 
+    /**
+     * @return AlmFolderManager
+     */
+    public function getFoldersManager(): AlmFolderManager
+    {
+        if ($this->folderManager === null || !($this->folderManager instanceof AlmFolderManager)){
+            $this->folderManager = new AlmFolderManager($this->curl, $this->routes);
+        }
+
+        return $this->folderManager;
+    }
+
+    /**
+     * @return AlmAttachmentManager
+     */
+    public function getAttachmentManager(): AlmAttachmentManager
+    {
+        if ($this->attachmentsManager === null || !($this->attachmentsManager instanceof AlmAttachmentManager)){
+            $this->attachmentsManager = new AlmAttachmentManager($this->curl, $this->routes);
+        }
+
+        return $this->attachmentsManager;
+    }
+
+    /**
+     * @return AlmRunStepsManager
+     */
+    public function getRunStepsManager()
+    {
+        if ($this->runStepsManager === null || !($this->runStepsManager instanceof AlmRunStepsManager)){
+            $this->runStepsManager = new AlmRunStepsManager($this->curl, $this->routes);
+        }
+
+        return $this->runStepsManager;
+    }
 
     /**
      * @param $entityType
@@ -89,6 +152,8 @@ class AlmEntityManager
      * @param array $criteria
      * @return AlmEntity
      * @throws AlmEntityManagerException
+     * @throws Exception\AlmCurlException
+     * @throws Exception\AlmException
      */
     public function getOneBy($entityType, array $criteria)
     {
@@ -136,7 +201,7 @@ class AlmEntityManager
 
                 $resultArray = array();
                 foreach ($xml->Entity as $entity) {
-                    array_push($resultArray, $this->entityExtractor->extract($entity));
+                    array_push($resultArray, $this->getEntityExtractor()->extract($entity));
                 }
 
                 return $resultArray;
@@ -169,6 +234,7 @@ class AlmEntityManager
      * @throws AlmEntityManagerException
      * @throws Exception\AlmCurlException
      * @throws Exception\AlmException
+     * @throws Exception\AlmEntityParametersManagerException
      */
     public function save(AlmEntity $entity)
     {
@@ -179,7 +245,7 @@ class AlmEntityManager
         );
 
         if ($entity->isNew()) {
-            $entityXml = $this->entityExtractor->pack($entity);
+            $entityXml = $this->getEntityExtractor()->pack($entity);
 
             array_push($headers, 'POST /HTTP/1.1');
 
@@ -191,14 +257,14 @@ class AlmEntityManager
 
         } else {
 
-            $entityXml = $this->entityExtractor->pack($entity, $this->parametersManager->getEntityEditableParameters($entity));
+            $entityXml = $this->getEntityExtractor()->pack($entity, $this->getParametersManager()->getEntityEditableParameters($entity));
 
-            if ($this->entityLocker->isEntityLocked($entity)) {
-                if (!$this->entityLocker->isEntityLockedByMe($entity)) {
+            if ($this->getEntityLocker()->isEntityLocked($entity)) {
+                if (!$this->getEntityLocker()->isEntityLockedByMe($entity)) {
                     throw new AlmEntityManagerException('Entity is locked by someone');
                 }
             } else {
-                $this->entityLocker->lockEntity($entity);
+                $this->getEntityLocker()->lockEntity($entity);
             }
 
             if ($this->isEntityVersioning($entity)) {
@@ -217,11 +283,11 @@ class AlmEntityManager
                 $this->getEntityLocker()->checkInEntity($entity);
             }
 
-            $this->entityLocker->unlockEntity($entity);
+            $this->getEntityLocker()->unlockEntity($entity);
 
         }
 
-        return $this->entityExtractor->extract($xml);
+        return $this->getEntityExtractor()->extract($xml);
 
     }
 
@@ -240,6 +306,4 @@ class AlmEntityManager
         }
         return false;
     }
-
-
 }

@@ -31,6 +31,7 @@ Class AlmClient
     /**
      * AlmClient constructor.
      * @param array $connectionOptions
+     * @throws Exception\AlmCurlCookieStorageException
      */
     public function __construct(array $connectionOptions)
     {
@@ -40,7 +41,7 @@ Class AlmClient
         $resolver->resolve($connectionOptions);
 
         $this->cookieStorage = new AlmCurlCookieStorage();
-        $this->curl = new AlmCurl($this->cookieStorage);
+        $this->curl = new AlmCurl($this->cookieStorage, $connectionOptions);
         $this->routes = new AlmRoutes($connectionOptions['host'], $connectionOptions['domain'], $connectionOptions['project']);
         $this->authenticator = new AlmAuthenticator($connectionOptions['username'], $connectionOptions['password'], $this->curl, $this->cookieStorage, $this->routes);
         $this->manager = new AlmEntityManager($this->curl, $this->routes);
@@ -57,6 +58,8 @@ Class AlmClient
             'project',
             'username',
             'password',
+            'proxy_host',
+            'proxy_port',
         ));
     }
 
