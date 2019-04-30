@@ -17,10 +17,4 @@ $almClient = new AlmClient($connectionParams);
 
 $defectFields = $almClient->getManager()->getParametersManager()->getEntityTypeFields(AlmEntityManager::ENTITY_TYPE_DEFECT);
 
-?>
-    <pre>
-    <?php
-    echo var_export($defectFields, true);
-    ?>
-    </pre>
-<?php
+echo dump($defectFields);

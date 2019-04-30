@@ -16,19 +16,23 @@ class AlmAttachmentManager
     /** @var AlmRoutes */
     protected $routes;
 
+    /** @var AlmEntityParametersManager */
+    protected $almEntityParametersManager;
+
     /** @var AlmEntity[] */
     protected $attachments = null;
 
     /**
      * AlmAttachmentManager constructor.
-     *
-     * @param AlmCurl $curl curl client
-     * @param AlmRoutes $routes routes object
+     * @param AlmCurl $curl
+     * @param AlmRoutes $routes
+     * @param AlmEntityParametersManager $almEntityParametersManager
      */
-    public function __construct(AlmCurl $curl, AlmRoutes $routes)
+    public function __construct(AlmCurl $curl, AlmRoutes $routes, AlmEntityParametersManager $almEntityParametersManager)
     {
         $this->curl = $curl;
         $this->routes = $routes;
+        $this->almEntityParametersManager = $almEntityParametersManager;
     }
 
     /**
@@ -51,7 +55,7 @@ class AlmAttachmentManager
             throw new AlmEntityParametersManagerException('Cannot get lists data');
         }
 
-        $extractor = new AlmEntityExtractor();
+        $extractor = new AlmEntityExtractor($this->almEntityParametersManager);
         foreach ($xml->Entity as $entity){
             $this->attachments[] = $extractor->extract($entity);
         }

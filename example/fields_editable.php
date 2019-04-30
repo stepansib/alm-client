@@ -15,7 +15,7 @@ use StepanSib\AlmClient\AlmEntityManager;
 
 $almClient = new AlmClient($connectionParams);
 
-$defectEditableFields = $almClient->getManager()->getEntityEditableParameters(AlmEntityManager::ENTITY_TYPE_DEFECT);
+$defectEditableFields = $almClient->getManager()->getParametersManager()->getEntityEditableParameters(AlmEntityManager::ENTITY_TYPE_DEFECT);
 
 ?>
     <pre>

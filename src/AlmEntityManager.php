@@ -23,7 +23,7 @@ class AlmEntityManager
     const ENTITY_TYPE_TEST_SET = 'test-set';
     const ENTITY_TYPE_TEST_INSTANCE = 'test-instance';
     const ENTITY_TYPE_RUN = 'run';
-    const ENTITY_TYPE_RUN_STEPS= 'run-step';
+    const ENTITY_TYPE_RUN_STEPS = 'run-step';
 
     /** @var AlmCurl */
     protected $curl;
@@ -71,8 +71,8 @@ class AlmEntityManager
      */
     public function getEntityExtractor()
     {
-        if ($this->entityExtractor === null || !($this->entityExtractor instanceof AlmEntityExtractor)){
-            $this->entityExtractor = new AlmEntityExtractor([]);
+        if ($this->entityExtractor === null || !($this->entityExtractor instanceof AlmEntityExtractor)) {
+            $this->entityExtractor = new AlmEntityExtractor($this->getParametersManager());
         }
         return $this->entityExtractor;
     }
@@ -82,7 +82,7 @@ class AlmEntityManager
      */
     public function getEntityLocker()
     {
-        if ($this->entityLocker === null || !($this->entityLocker instanceof AlmEntityLocker)){
+        if ($this->entityLocker === null || !($this->entityLocker instanceof AlmEntityLocker)) {
             $this->entityLocker = new AlmEntityLocker($this->curl, $this->routes);
         }
 
@@ -94,7 +94,7 @@ class AlmEntityManager
      */
     public function getParametersManager()
     {
-        if ($this->parametersManager === null || !($this->parametersManager instanceof  AlmEntityParametersManager)){
+        if ($this->parametersManager === null || !($this->parametersManager instanceof AlmEntityParametersManager)) {
             $this->parametersManager = new AlmEntityParametersManager($this->curl, $this->routes);
         }
 
@@ -106,7 +106,7 @@ class AlmEntityManager
      */
     public function getFoldersManager(): AlmFolderManager
     {
-        if ($this->folderManager === null || !($this->folderManager instanceof AlmFolderManager)){
+        if ($this->folderManager === null || !($this->folderManager instanceof AlmFolderManager)) {
             $this->folderManager = new AlmFolderManager($this->curl, $this->routes);
         }
 
@@ -118,8 +118,12 @@ class AlmEntityManager
      */
     public function getAttachmentManager(): AlmAttachmentManager
     {
-        if ($this->attachmentsManager === null || !($this->attachmentsManager instanceof AlmAttachmentManager)){
-            $this->attachmentsManager = new AlmAttachmentManager($this->curl, $this->routes);
+        if ($this->attachmentsManager === null || !($this->attachmentsManager instanceof AlmAttachmentManager)) {
+            $this->attachmentsManager = new AlmAttachmentManager(
+                $this->curl,
+                $this->routes,
+                $this->getParametersManager()
+            );
         }
 
         return $this->attachmentsManager;
@@ -130,8 +134,12 @@ class AlmEntityManager
      */
     public function getRunStepsManager()
     {
-        if ($this->runStepsManager === null || !($this->runStepsManager instanceof AlmRunStepsManager)){
-            $this->runStepsManager = new AlmRunStepsManager($this->curl, $this->routes);
+        if ($this->runStepsManager === null || !($this->runStepsManager instanceof AlmRunStepsManager)) {
+            $this->runStepsManager = new AlmRunStepsManager(
+                $this->curl,
+                $this->routes,
+                $this->getParametersManager()
+            );
         }
 
         return $this->runStepsManager;
@@ -257,7 +265,7 @@ class AlmEntityManager
 
         } else {
 
-            $entityXml = $this->getEntityExtractor()->pack($entity, $this->getParametersManager()->getEntityEditableParameters($entity));
+            $entityXml = $this->getEntityExtractor()->pack($entity, $this->getParametersManager()->getEntityEditableParameters($entity->getType()));
 
             if ($this->getEntityLocker()->isEntityLocked($entity)) {
                 if (!$this->getEntityLocker()->isEntityLockedByMe($entity)) {

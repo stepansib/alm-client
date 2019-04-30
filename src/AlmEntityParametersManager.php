@@ -22,6 +22,9 @@ class AlmEntityParametersManager
     /** @var \SimpleXMLElement */
     protected $lists;
 
+    /** @var array */
+    protected $cachedFields = [];
+
     /**
      * AlmEntityLocker constructor.
      * @param AlmCurl $curl
@@ -76,47 +79,55 @@ class AlmEntityParametersManager
      */
     public function getEntityTypeFields($entityType, $onlyRequiredFields = false, $asXml = false)
     {
+        $cacheKey = $entityType . ($onlyRequiredFields ? '1' : '0') . ($asXml ? '1' : '0');
 
-        $this->curl->exec($this->routes->getEntityFieldsUrl($entityType, $onlyRequiredFields));
-        $xml = simplexml_load_string($this->curl->getResult());
+        if (!isset($this->cachedFields[$cacheKey])) {
 
-        if (false === $xml) {
-            throw new AlmEntityParametersManagerException('Cannot get entity required fields, server returned incorrect XML');
-        }
+            $this->curl->exec($this->routes->getEntityFieldsUrl($entityType, $onlyRequiredFields));
+            $xml = simplexml_load_string($this->curl->getResult());
 
-        if ($asXml) {
-            return $xml->asXML();
-        }
-
-        $fields = array();
-
-        /** @var \SimpleXMLElement $field */
-        foreach ($xml as $field) {
-            $fieldData = array();
-
-            $fieldData['label'] = (string)$field->attributes()->Label;
-            $fieldData['editable'] = (string)$field->Editable[0] == "true" ? true : false;
-            $fieldData['SupportsMultivalue'] = (string)$field->SupportsMultivalue[0] == "true" ? true : false;
-
-            if (property_exists($field, 'List-Id')) {
-                $fieldData['list'] = $this->getListValues((string)$field->{'List-Id'});
+            if (false === $xml) {
+                throw new AlmEntityParametersManagerException('Cannot get entity required fields, server returned incorrect XML');
             }
 
-            $fields[(string)$field->attributes()->Name] = $fieldData;
+            if ($asXml) {
+                return $xml->asXML();
+            }
+
+            $fields = array();
+
+            /** @var \SimpleXMLElement $field */
+            foreach ($xml as $field) {
+                $fieldData = array();
+
+                $fieldData['label'] = (string)$field->attributes()->Label;
+                $fieldData['editable'] = (string)$field->Editable[0] == "true" ? true : false;
+                $fieldData['multiple'] = (string)$field->SupportsMultivalue[0] == "true" ? true : false;
+
+                if (property_exists($field, 'List-Id')) {
+                    $fieldData['list'] = $this->getListValues((string)$field->{'List-Id'});
+                }
+
+                $fields[(string)$field->attributes()->Name] = $fieldData;
+            }
+
+            $this->cachedFields[$cacheKey] = $fields;
         }
 
-        return $fields;
+        return $this->cachedFields[$cacheKey];
     }
 
     /**
-     * @param AlmEntity $entity
+     * @param string $entityType
      * @return array
      * @throws AlmEntityParametersManagerException
+     * @throws Exception\AlmCurlException
+     * @throws Exception\AlmException
      */
-    public function getEntityEditableParameters(AlmEntity $entity)
+    public function getEntityEditableParameters(string $entityType)
     {
         $arr = array();
-        foreach ($this->getEntityTypeFields($entity->getType()) as $fieldName => $fieldData) {
+        foreach ($this->getEntityTypeFields($entityType) as $fieldName => $fieldData) {
             if ($fieldData['editable']) {
                 array_push($arr, $fieldName);
             }

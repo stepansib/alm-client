@@ -20,9 +20,11 @@ if (file_exists(__DIR__ . '/connection_params.php')) {
         'project' => 'your_project_name',
         'username' => 'your_user_name',
         'password' => 'your_password',
+        'proxy_host' => 'proxy_host', //nullable
+        'proxy_port' => 'proxy_port', //nullable
     );
 }
 
-$defectId = '53';
+$defectId = '4017';
 
 ?>

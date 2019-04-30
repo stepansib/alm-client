@@ -11,6 +11,18 @@ namespace StepanSib\AlmClient;
 class AlmEntityExtractor
 {
 
+    /** @var AlmEntityParametersManager */
+    protected $almEntityParametersManager;
+
+    /**
+     * AlmEntityExtractor constructor.
+     * @param AlmEntityParametersManager $almEntityParametersManager
+     */
+    public function __construct(AlmEntityParametersManager $almEntityParametersManager)
+    {
+        $this->almEntityParametersManager = $almEntityParametersManager;
+    }
+
     public function pack(AlmEntity $entity, array $editableParameters = array())
     {
         $xml = new \SimpleXMLElement('<Entity></Entity>');
@@ -29,7 +41,13 @@ class AlmEntityExtractor
             if ($isParameterPackable) {
                 $xmlField = $xmlFields->addChild('Field');
                 $xmlField->addAttribute('Name', $field);
-                $xmlField->addChild('Value', $value);
+                if (is_array($value)) {
+                    foreach ($value as $item) {
+                        $xmlField->addChild('Value', $item);
+                    }
+                } else {
+                    $xmlField->addChild('Value', $value);
+                }
             }
         }
 
@@ -39,17 +57,49 @@ class AlmEntityExtractor
     /**
      * @param \SimpleXMLElement $entityXml
      * @return AlmEntity
+     * @throws Exception\AlmCurlException
+     * @throws Exception\AlmEntityParametersManagerException
+     * @throws Exception\AlmException
      */
     public function extract(\SimpleXMLElement $entityXml)
     {
-        $entity = new AlmEntity($entityXml->attributes()->Type);
+        $entity = new AlmEntity((string)$entityXml->attributes()->Type);
+
+        $entityFieldsData = $this->almEntityParametersManager->getEntityTypeFields(AlmEntityManager::ENTITY_TYPE_DEFECT);
 
         $entityXml = $entityXml->Fields[0];
         foreach ($entityXml->Field as $field) {
-            $entity->setParameter((string)$field->attributes()->Name, $field->Value[0], false);
+            $fieldName = (string)$field->attributes()->Name;
+
+            $value = $this->processValueType($field->Value[0]);
+            if (isset($entityFieldsData[$fieldName]) && $entityFieldsData[$fieldName]['multiple'] === true) {
+                $value = [];
+                foreach ($field->Value as $arrValue) {
+                    $value[] = $this->processValueType($arrValue);
+                }
+            }
+
+            $entity->setParameter($fieldName, $value, false);
         }
 
         return $entity;
+    }
+
+    /**
+     * @param $value
+     * @return int|string
+     */
+    protected function processValueType($value)
+    {
+        $value = (string)$value;
+
+        if (is_numeric($value)) {
+            return (int)$value;
+        }
+
+        if (is_string($value)) {
+            return (string)$value;
+        }
     }
 
 }

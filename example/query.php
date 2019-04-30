@@ -10,7 +10,6 @@ require 'config.php';
 require 'menu.php';
 
 use StepanSib\AlmClient\AlmClient;
-use StepanSib\AlmClient\AlmEntity;
 use StepanSib\AlmClient\AlmEntityManager;
 
 $almClient = new AlmClient($connectionParams);
@@ -28,9 +27,10 @@ $defects = $almClient->getManager()->getBy(AlmEntityManager::ENTITY_TYPE_DEFECT,
     'status',
     'creation-time',
     'detected-by',
+    'user-11',
 ),
     100,
-1
+    1
 );
 
 foreach ($defects as $defect) {
@@ -39,11 +39,8 @@ foreach ($defects as $defect) {
     echo $defect->getParameter('id') . '<br/>';
 
     // or by magic method
-    echo $defect->id . '<hr/>';
+    // echo $defect->id . '<hr/>';
 
-    // or simply iterate through all of the fields
-    foreach ($defect->getParameters() as $field => $value) {
-        echo $field . ': ' . $value . '<br/>';
-    }
+    dump($defect);
     echo '<hr/>';
 }

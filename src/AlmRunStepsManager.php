@@ -17,18 +17,23 @@ class AlmRunStepsManager
     /** @var AlmRoutes */
     protected $routes;
 
+    /** @var AlmEntityParametersManager */
+    protected $almEntityParametersManager;
+
     /** @var \SimpleXMLElement */
     protected $steps;
 
     /**
-     * AlmEntityLocker constructor.
+     * AlmRunStepsManager constructor.
      * @param AlmCurl $curl
      * @param AlmRoutes $routes
+     * @param AlmEntityParametersManager $almEntityParametersManager
      */
-    public function __construct(AlmCurl $curl, AlmRoutes $routes)
+    public function __construct(AlmCurl $curl, AlmRoutes $routes,AlmEntityParametersManager $almEntityParametersManager)
     {
         $this->curl = $curl;
         $this->routes = $routes;
+        $this->almEntityParametersManager = $almEntityParametersManager;
     }
 
     /**
@@ -47,7 +52,7 @@ class AlmRunStepsManager
                 throw new AlmEntityParametersManagerException('Cannot get lists data');
             }
 
-            $extractor = new AlmEntityExtractor();
+            $extractor = new AlmEntityExtractor($this->almEntityParametersManager);
             foreach ($xml->Entity as $entity){
                 $this->steps[] = $extractor->extract($entity);
             }
