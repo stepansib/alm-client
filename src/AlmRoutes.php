@@ -38,14 +38,17 @@ class AlmRoutes
         $this->project = $project;
     }
 
+
     public function getLoginUrl()
     {
-        return $this->host . '/qcbin/api/authentication/sign-in';
+        //return $this->host . '/qcbin/authentication/sign-in';
+        return $this->host . '/qcbin/authentication-point/authenticate';
     }
 
     public function getLogoutUrl()
     {
-        return $this->host . '/qcbin/api/authentication/sign-out';
+        //return $this->host . '/qcbin/authentication/sign-out';
+        return $this->host . '/qcbin/authentication-point/logout';
     }
 
     public function getAuthenticationCheckUrl()
