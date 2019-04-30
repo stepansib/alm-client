@@ -96,6 +96,7 @@ class AlmEntityParametersManager
 
             $fieldData['label'] = (string)$field->attributes()->Label;
             $fieldData['editable'] = (string)$field->Editable[0] == "true" ? true : false;
+            $fieldData['SupportsMultivalue'] = (string)$field->SupportsMultivalue[0] == "true" ? true : false;
 
             if (property_exists($field, 'List-Id')) {
                 $fieldData['list'] = $this->getListValues((string)$field->{'List-Id'});
