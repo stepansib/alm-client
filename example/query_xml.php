@@ -17,6 +17,15 @@ $almClient = new AlmClient($connectionParams);
 
 $defectsRawResponse = $almClient->getManager()->getBy(AlmEntityManager::ENTITY_TYPE_DEFECT, array(
     'id' => '='.$defectId,
-), AlmEntityManager::HYDRATION_NONE);
+), array(
+    'name',
+    'id',
+    'priority',
+    'owner',
+    'status',
+    'creation-time',
+    'detected-by',
+    'user-11',
+),2501,1,'{id[DESC]}', AlmEntityManager::HYDRATION_NONE);
 
 echo $defectsRawResponse;
