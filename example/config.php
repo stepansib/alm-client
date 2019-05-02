@@ -14,7 +14,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 if (file_exists(__DIR__ . '/connection_params.php')) {
     require_once __DIR__ . '/connection_params.php';
 } else {
-    $connectionParams = array(
+    $connectionParams = [
         'host' => 'http://your.alm.server.com:8080',
         'domain' => 'your_domain',
         'project' => 'your_project_name',
@@ -22,9 +22,9 @@ if (file_exists(__DIR__ . '/connection_params.php')) {
         'password' => 'your_password',
         'proxy_host' => 'proxy_host', //nullable
         'proxy_port' => 'proxy_port', //nullable
-    );
+    ];
 }
 
 $defectId = '4017';
 
-?>
+

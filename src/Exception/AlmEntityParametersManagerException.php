@@ -8,9 +8,17 @@
 
 namespace StepanSib\AlmClient\Exception;
 
-class AlmEntityParametersManagerException extends \Exception
+use Exception;
+
+/**
+ * Class AlmEntityParametersManagerException
+ */
+class AlmEntityParametersManagerException extends Exception
 {
 
+    /**
+     * @param $message
+     */
     public function setMessage($message)
     {
         $this->message = 'Entity parameters error: ' . $message;

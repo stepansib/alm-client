@@ -10,6 +10,9 @@ namespace StepanSib\AlmClient;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Class AlmClient
+ */
 Class AlmClient
 {
 
@@ -52,7 +55,7 @@ Class AlmClient
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setRequired(array(
+        $resolver->setRequired([
             'host',
             'domain',
             'project',
@@ -60,7 +63,7 @@ Class AlmClient
             'password',
             'proxy_host',
             'proxy_port',
-        ));
+        ]);
     }
 
     /**

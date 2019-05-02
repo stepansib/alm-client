@@ -8,12 +8,20 @@
 
 namespace StepanSib\AlmClient\Exception;
 
-class AlmEntityExtractorException extends \Exception
+use Exception;
+
+/**
+ * Class AlmEntityExtractorException
+ */
+class AlmEntityExtractorException extends Exception
 {
 
+    /**
+     * @param $message
+     */
     public function setMessage($message)
     {
-        $this->message = 'Entity extractor error: '.$message;
+        $this->message = 'Entity extractor error: ' . $message;
     }
 
 }

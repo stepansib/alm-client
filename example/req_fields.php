@@ -10,7 +10,6 @@ require 'config.php';
 require 'menu.php';
 
 use StepanSib\AlmClient\AlmClient;
-use StepanSib\AlmClient\AlmEntity;
 use StepanSib\AlmClient\AlmEntityManager;
 
 $almClient = new AlmClient($connectionParams);

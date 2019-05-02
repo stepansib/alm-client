@@ -8,9 +8,13 @@
 
 namespace StepanSib\AlmClient;
 
+use SimpleXMLElement;
 use StepanSib\AlmClient\Exception\AlmCurlException;
 use StepanSib\AlmClient\Exception\AlmException;
 
+/**
+ * Class AlmCurl
+ */
 Class AlmCurl
 {
 
@@ -35,6 +39,7 @@ Class AlmCurl
 
     /** @var array */
     protected $options;
+
     /**
      * AlmCurl constructor.
      * @param AlmCurlCookieStorage $cookieStorage
@@ -60,7 +65,7 @@ Class AlmCurl
             curl_setopt($this->curl, CURLOPT_TIMEOUT, 500); //overall timeout
             curl_setopt($this->curl, CURLOPT_HTTPGET, true);
 
-            if (!empty($this->options['proxy_host']) && !empty($this->options['proxy_port'])){
+            if (!empty($this->options['proxy_host']) && !empty($this->options['proxy_port'])) {
                 curl_setopt($this->curl, CURLOPT_PROXY, $this->options['proxy_host']);
                 curl_setopt($this->curl, CURLOPT_PROXYPORT, $this->options['proxy_port']);
             }
@@ -71,7 +76,15 @@ Class AlmCurl
         return $this;
     }
 
-    public function setHeaders(array $headers = array())
+    /**
+     * @param array $headers
+     * @return $this
+     */
+    /**
+     * @param array $headers
+     * @return $this
+     */
+    public function setHeaders(array $headers = [])
     {
         $this->curlInit();
 
@@ -82,6 +95,14 @@ Class AlmCurl
         return $this;
     }
 
+    /**
+     * @param null $body
+     * @return $this
+     */
+    /**
+     * @param null $body
+     * @return $this
+     */
     public function setPost($body = null)
     {
         $this->curlInit();
@@ -92,6 +113,14 @@ Class AlmCurl
         return $this;
     }
 
+    /**
+     * @param null $body
+     * @return $this
+     */
+    /**
+     * @param null $body
+     * @return $this
+     */
     public function setPut($body = null)
     {
         $this->curlInit();
@@ -102,6 +131,14 @@ Class AlmCurl
         return $this;
     }
 
+    /**
+     * @param null $body
+     * @return $this
+     */
+    /**
+     * @param null $body
+     * @return $this
+     */
     public function setDelete($body = null)
     {
         $this->curlInit();
@@ -112,6 +149,16 @@ Class AlmCurl
         return $this;
     }
 
+    /**
+     * @param $resource
+     * @param null $body
+     * @return $this
+     */
+    /**
+     * @param $resource
+     * @param null $body
+     * @return $this
+     */
     public function setDownload($resource, $body = null)
     {
         $this->curlInit();
@@ -165,6 +212,9 @@ Class AlmCurl
         return $this;
     }
 
+    /**
+     * @return SimpleXMLElement|string
+     */
     protected function getInternalError()
     {
         $xml = simplexml_load_string($this->getResult());

@@ -8,9 +8,17 @@
 
 namespace StepanSib\AlmClient\Exception;
 
-class AlmCurlException extends \Exception
+use Exception;
+
+/**
+ * Class AlmCurlException
+ */
+class AlmCurlException extends Exception
 {
 
+    /**
+     * @param $message
+     */
     public function setMessage($message)
     {
         $this->message = 'Curl error: ' . $message;

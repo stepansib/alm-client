@@ -10,6 +10,9 @@ namespace StepanSib\AlmClient;
 
 use StepanSib\AlmClient\Exception\AlmCurlCookieStorageException;
 
+/**
+ * Class AlmCurlCookieStorage
+ */
 class AlmCurlCookieStorage
 {
 
@@ -22,6 +25,12 @@ class AlmCurlCookieStorage
         }
     }
 
+    /**
+     * @return $this
+     */
+    /**
+     * @return $this
+     */
     public function createCurlCookieFile()
     {
         if (!$this->isCurlCookieFileExist()) {

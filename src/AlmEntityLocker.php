@@ -8,6 +8,9 @@
 
 namespace StepanSib\AlmClient;
 
+/**
+ * Class AlmEntityLocker
+ */
 class AlmEntityLocker
 {
 
@@ -35,11 +38,11 @@ class AlmEntityLocker
      */
     public function lockEntity(AlmEntity $entity)
     {
-        $this->curl->setHeaders(array(
+        $this->curl->setHeaders([
             'POST /HTTP/1.1',
             'Content-Type: application/xml',
             'Accept: application/xml',
-        ));
+        ]);
 
         $this->curl->setPost()
             ->createCookie()
@@ -53,11 +56,11 @@ class AlmEntityLocker
      */
     public function unlockEntity(AlmEntity $entity)
     {
-        $this->curl->setHeaders(array(
+        $this->curl->setHeaders([
             'DELETE /HTTP/1.1',
             'Content-Type: application/xml',
             //'Accept: application/xml',
-        ))
+        ])
             ->setDelete()
             ->exec($this->routes->getEntityLockUrl($entity->getTypePluralized(), $entity->id));
     }
@@ -82,7 +85,7 @@ class AlmEntityLocker
      */
     public function checkOutEntity(AlmEntity $entity)
     {
-        $this->curl->setHeaders(array('POST /HTTP/1.1'))
+        $this->curl->setHeaders(['POST /HTTP/1.1'])
             ->setPost()
             ->exec($this->routes->getEntityCheckoutUrl($entity->getTypePluralized(), $entity->id));
     }
@@ -94,7 +97,7 @@ class AlmEntityLocker
      */
     public function checkInEntity(AlmEntity $entity)
     {
-        $this->curl->setHeaders(array('POST /HTTP/1.1'))
+        $this->curl->setHeaders(['POST /HTTP/1.1'])
             ->setPost()
             ->exec($this->routes->getEntityCheckinUrl($entity->getTypePluralized(), $entity->id));
     }
@@ -102,6 +105,8 @@ class AlmEntityLocker
     /**
      * @param AlmEntity $entity
      * @return bool
+     * @throws Exception\AlmCurlException
+     * @throws Exception\AlmException
      */
     public function isEntityLocked(AlmEntity $entity)
     {
@@ -114,6 +119,8 @@ class AlmEntityLocker
     /**
      * @param AlmEntity $entity
      * @return bool
+     * @throws Exception\AlmCurlException
+     * @throws Exception\AlmException
      */
     public function isEntityLockedByMe(AlmEntity $entity)
     {

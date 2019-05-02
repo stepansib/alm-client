@@ -4,10 +4,17 @@
  * @created 10/11/18 5:12 PM
  * @version 1.0
  */
+
 namespace StepanSib\AlmClient;
 
+use Exception;
+use StepanSib\AlmClient\Exception\AlmCurlException;
 use StepanSib\AlmClient\Exception\AlmEntityParametersManagerException;
+use StepanSib\AlmClient\Exception\AlmException;
 
+/**
+ * Class AlmAttachmentManager
+ */
 class AlmAttachmentManager
 {
     /** @var AlmCurl */
@@ -38,10 +45,11 @@ class AlmAttachmentManager
     /**
      * @param int $entityId entity id
      * @param string $entityType entity type
-     * @return AlmEntity[]
+     *
+     * @return array|null
      * @throws AlmEntityParametersManagerException
-     * @throws Exception\AlmCurlException
-     * @throws Exception\AlmException
+     * @throws AlmCurlException
+     * @throws AlmException
      */
     public function getAttachments($entityId, $entityType): ?array
     {
@@ -49,14 +57,15 @@ class AlmAttachmentManager
         try {
             $this->curl->exec($this->routes->getAttachmentsUrl($entityId, $entityType));
             $xml = simplexml_load_string($this->curl->getResult());
-        } catch (\Exception $e){}
+        } catch (Exception $e) {
+        }
 
         if (!$xml) {
             throw new AlmEntityParametersManagerException('Cannot get lists data');
         }
 
         $extractor = new AlmEntityExtractor($this->almEntityParametersManager);
-        foreach ($xml->Entity as $entity){
+        foreach ($xml->Entity as $entity) {
             $this->attachments[] = $extractor->extract($entity);
         }
 
@@ -68,8 +77,8 @@ class AlmAttachmentManager
      * @param string $filename file name
      * @param int $attachmentId attachment id
      * @return null|string
-     * @throws Exception\AlmCurlException
-     * @throws Exception\AlmException
+     * @throws AlmCurlException
+     * @throws AlmException
      */
     public function downloadAttachment($path, $filename, $attachmentId)
     {

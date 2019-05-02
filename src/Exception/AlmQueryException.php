@@ -8,12 +8,20 @@
 
 namespace StepanSib\AlmClient\Exception;
 
-class AlmQueryException extends \Exception
+use Exception;
+
+/**
+ * Class AlmQueryException
+ */
+class AlmQueryException extends Exception
 {
 
+    /**
+     * @param $message
+     */
     public function setMessage($message)
     {
-        $this->message = 'Query error: '.$message;
+        $this->message = 'Query error: ' . $message;
     }
 
 }

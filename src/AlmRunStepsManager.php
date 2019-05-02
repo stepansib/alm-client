@@ -4,10 +4,15 @@
  * @created 10/5/18 3:22 PM
  * @version 1.0
  */
+
 namespace StepanSib\AlmClient;
 
+use SimpleXMLElement;
 use StepanSib\AlmClient\Exception\AlmEntityParametersManagerException;
 
+/**
+ * Class AlmRunStepsManager
+ */
 class AlmRunStepsManager
 {
 
@@ -20,7 +25,7 @@ class AlmRunStepsManager
     /** @var AlmEntityParametersManager */
     protected $almEntityParametersManager;
 
-    /** @var \SimpleXMLElement */
+    /** @var SimpleXMLElement */
     protected $steps;
 
     /**
@@ -29,7 +34,7 @@ class AlmRunStepsManager
      * @param AlmRoutes $routes
      * @param AlmEntityParametersManager $almEntityParametersManager
      */
-    public function __construct(AlmCurl $curl, AlmRoutes $routes,AlmEntityParametersManager $almEntityParametersManager)
+    public function __construct(AlmCurl $curl, AlmRoutes $routes, AlmEntityParametersManager $almEntityParametersManager)
     {
         $this->curl = $curl;
         $this->routes = $routes;
@@ -53,7 +58,7 @@ class AlmRunStepsManager
             }
 
             $extractor = new AlmEntityExtractor($this->almEntityParametersManager);
-            foreach ($xml->Entity as $entity){
+            foreach ($xml->Entity as $entity) {
                 $this->steps[] = $extractor->extract($entity);
             }
         } catch (Exception\AlmCurlException $e) {

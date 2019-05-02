@@ -8,9 +8,17 @@
 
 namespace StepanSib\AlmClient\Exception;
 
-class AlmEntityException extends \Exception
+use Exception;
+
+/**
+ * Class AlmEntityException
+ */
+class AlmEntityException extends Exception
 {
 
+    /**
+     * @param $message
+     */
     public function setMessage($message)
     {
         $this->message = 'ALM entity error: ' . $message;

@@ -8,7 +8,12 @@
 
 namespace StepanSib\AlmClient\Exception;
 
-class AlmException extends \Exception
+use Exception;
+
+/**
+ * Class AlmException
+ */
+class AlmException extends Exception
 {
-    
+
 }

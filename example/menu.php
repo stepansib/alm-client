@@ -5,6 +5,9 @@
  * Date: 10.02.2016
  * Time: 23:16
  */
+
+use StepanSib\AlmClient\AlmCurlCookieStorage;
+
 ?>
 
 <a style='margin-right: 15px;' href="login.php">Login</a>
@@ -26,7 +29,7 @@
 <?php
 
 // You can get cookie storage file path
-$cookieStorage = new \StepanSib\AlmClient\AlmCurlCookieStorage();
+$cookieStorage = new AlmCurlCookieStorage();
 if ($cookieStorage->isCurlCookieFileExist()) {
     $cookieStorageFile = $cookieStorage->getCurlCookieFile();
 }

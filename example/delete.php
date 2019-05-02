@@ -10,14 +10,13 @@ require 'config.php';
 require 'menu.php';
 
 use StepanSib\AlmClient\AlmClient;
-use StepanSib\AlmClient\AlmEntity;
 use StepanSib\AlmClient\AlmEntityManager;
 
 $almClient = new AlmClient($connectionParams);
 
-$entity = $almClient->getManager()->getOneBy(AlmEntityManager::ENTITY_TYPE_DEFECT, array(
+$entity = $almClient->getManager()->getOneBy(AlmEntityManager::ENTITY_TYPE_DEFECT, [
     'id' => $defectId
-));
+]);
 
 $almClient->getManager()->delete($entity);
 

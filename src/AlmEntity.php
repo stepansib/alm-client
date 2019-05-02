@@ -10,6 +10,9 @@ namespace StepanSib\AlmClient;
 
 use StepanSib\AlmClient\Exception\AlmEntityException;
 
+/**
+ * Class AlmEntity
+ */
 class AlmEntity
 {
 
@@ -19,13 +22,25 @@ class AlmEntity
 
     protected $type;
 
+    /**
+     * AlmEntity constructor.
+     * @param $type
+     */
     public function __construct($type)
     {
-        $this->parameters = array();
-        $this->parametersChanged = array();
+        $this->parameters = [];
+        $this->parametersChanged = [];
         $this->setType($type);
     }
 
+    /**
+     * @param $type
+     * @return $this
+     */
+    /**
+     * @param $type
+     * @return $this
+     */
     public function setType($type)
     {
         $this->type = $type;
@@ -37,11 +52,25 @@ class AlmEntity
         return $this->type;
     }
 
+    /**
+     * @return string
+     */
+    /**
+     * @return string
+     */
     public function getTypePluralized()
     {
-        return $this->getType().'s';
+        return $this->getType() . 's';
     }
 
+    /**
+     * @param $parameterName
+     * @return int|string
+     */
+    /**
+     * @param $parameterName
+     * @return int|string
+     */
     protected function getParameterKey($parameterName)
     {
         $parameters = $this->getParameters();
@@ -58,6 +87,18 @@ class AlmEntity
 
     }
 
+    /**
+     * @param $parameterName
+     * @param $value
+     * @param bool $paramChanged
+     * @return $this
+     */
+    /**
+     * @param $parameterName
+     * @param $value
+     * @param bool $paramChanged
+     * @return $this
+     */
     public function setParameter($parameterName, $value, $paramChanged = true)
     {
         $parameterOriginalName = $this->getParameterKey($parameterName);
@@ -73,6 +114,16 @@ class AlmEntity
         return $this;
     }
 
+    /**
+     * @param $parameterName
+     * @return mixed
+     * @throws AlmEntityException
+     */
+    /**
+     * @param $parameterName
+     * @return mixed
+     * @throws AlmEntityException
+     */
     public function getParameter($parameterName)
     {
         $parameterOriginalName = $this->getParameterKey($parameterName);
@@ -84,16 +135,34 @@ class AlmEntity
         return $this->parameters[$parameterOriginalName];
     }
 
+    /**
+     * @return array
+     */
+    /**
+     * @return array
+     */
     public function getParameters()
     {
         return $this->parameters;
     }
 
+    /**
+     * @return array
+     */
+    /**
+     * @return array
+     */
     public function getParametersChanged()
     {
         return $this->parametersChanged;
     }
 
+    /**
+     * @return bool
+     */
+    /**
+     * @return bool
+     */
     public function isNew()
     {
         if (isset($this->parameters['id'])) {
@@ -105,6 +174,7 @@ class AlmEntity
     /**
      * @param $parameterName
      * @return mixed
+     * @throws AlmEntityException
      */
     public function __get($parameterName)
     {

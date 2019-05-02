@@ -10,14 +10,13 @@ require 'config.php';
 require 'header_xml.php';
 
 use StepanSib\AlmClient\AlmClient;
-use StepanSib\AlmClient\AlmEntity;
 use StepanSib\AlmClient\AlmEntityManager;
 
 $almClient = new AlmClient($connectionParams);
 
-$defectsRawResponse = $almClient->getManager()->getBy(AlmEntityManager::ENTITY_TYPE_DEFECT, array(
-    'id' => '='.$defectId,
-), array(
+$defectsRawResponse = $almClient->getManager()->getBy(AlmEntityManager::ENTITY_TYPE_DEFECT, [
+    'id' => '=' . $defectId,
+], [
     'name',
     'id',
     'priority',
@@ -26,6 +25,6 @@ $defectsRawResponse = $almClient->getManager()->getBy(AlmEntityManager::ENTITY_T
     'creation-time',
     'detected-by',
     'user-11',
-),2501,1,'{id[DESC]}', AlmEntityManager::HYDRATION_NONE);
+], 2501, 1, '{id[DESC]}', AlmEntityManager::HYDRATION_NONE);
 
 echo $defectsRawResponse;

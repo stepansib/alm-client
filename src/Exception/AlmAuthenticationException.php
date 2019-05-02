@@ -8,12 +8,20 @@
 
 namespace StepanSib\AlmClient\Exception;
 
-class AlmAuthenticationException extends \Exception
+use Exception;
+
+/**
+ * Class AlmAuthenticationException
+ */
+class AlmAuthenticationException extends Exception
 {
 
+    /**
+     * @param $message
+     */
     public function setMessage($message)
     {
-        $this->message = 'Authentication error: '.$message;
+        $this->message = 'Authentication error: ' . $message;
     }
 
 }

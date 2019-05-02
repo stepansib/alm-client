@@ -14,9 +14,9 @@ use StepanSib\AlmClient\AlmEntityManager;
 
 $almClient = new AlmClient($connectionParams);
 
-$entity = $almClient->getManager()->getOneBy(AlmEntityManager::ENTITY_TYPE_DEFECT, array(
+$entity = $almClient->getManager()->getOneBy(AlmEntityManager::ENTITY_TYPE_DEFECT, [
     'id' => $defectId
-));
+]);
 
 $entity->setParameter('description', 'changed desc 2');
 $almClient->getManager()->save($entity);

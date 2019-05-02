@@ -10,6 +10,9 @@ namespace StepanSib\AlmClient;
 
 use StepanSib\AlmClient\Exception\AlmEntityManagerException;
 
+/**
+ * Class AlmEntityManager
+ */
 class AlmEntityManager
 {
 
@@ -161,6 +164,7 @@ class AlmEntityManager
      * @return AlmEntity
      * @throws AlmEntityManagerException
      * @throws Exception\AlmCurlException
+     * @throws Exception\AlmEntityParametersManagerException
      * @throws Exception\AlmException
      */
     public function getOneBy($entityType, array $criteria)
@@ -172,14 +176,18 @@ class AlmEntityManager
     /**
      * @param $entityType
      * @param array $criteria
-     * @param string $hydration
      * @param array $fields
+     * @param int $perPage
+     * @param int $page
+     * @param string $orderBy
+     * @param string $hydration
      * @return array|null|string
      * @throws AlmEntityManagerException
      * @throws Exception\AlmCurlException
+     * @throws Exception\AlmEntityParametersManagerException
      * @throws Exception\AlmException
      */
-    public function getBy($entityType, array $criteria, array $fields = array(), $perPage = 250, $page = 1, $orderBy = '{id[DESC]}', $hydration = self::HYDRATION_ENTITY)
+    public function getBy($entityType, array $criteria, array $fields = [], $perPage = 250, $page = 1, $orderBy = '{id[DESC]}', $hydration = self::HYDRATION_ENTITY)
     {
         $fieldsList = '';
         if (count($fields)) {
@@ -190,7 +198,7 @@ class AlmEntityManager
             $page = $perPage * ($page - 1) + 1;
         }
 
-        $criteriaProcessed = array();
+        $criteriaProcessed = [];
 
         if (count($criteria) == 0) {
             throw new AlmEntityManagerException('Criteria array cannot be empty');
@@ -207,7 +215,7 @@ class AlmEntityManager
             case self::HYDRATION_ENTITY:
                 $xml = simplexml_load_string($resultRaw);
 
-                $resultArray = array();
+                $resultArray = [];
                 foreach ($xml->Entity as $entity) {
                     array_push($resultArray, $this->getEntityExtractor()->extract($entity));
                 }
@@ -230,7 +238,7 @@ class AlmEntityManager
      */
     public function delete(AlmEntity $entity)
     {
-        $this->curl->setHeaders(array('DELETE /HTTP/1.1'))
+        $this->curl->setHeaders(['DELETE /HTTP/1.1'])
             ->setDelete()
             ->exec($this->routes->getEntityUrl($entity->getTypePluralized(), $entity->id));
 
@@ -247,10 +255,10 @@ class AlmEntityManager
     public function save(AlmEntity $entity)
     {
 
-        $headers = array(
+        $headers = [
             'Accept: application/xml',
             'Content-Type: application/xml',
-        );
+        ];
 
         if ($entity->isNew()) {
             $entityXml = $this->getEntityExtractor()->pack($entity);

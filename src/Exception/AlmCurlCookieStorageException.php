@@ -8,9 +8,17 @@
 
 namespace StepanSib\AlmClient\Exception;
 
-class AlmCurlCookieStorageException extends \Exception
+use Exception;
+
+/**
+ * Class AlmCurlCookieStorageException
+ */
+class AlmCurlCookieStorageException extends Exception
 {
 
+    /**
+     * @param $message
+     */
     public function setMessage($message)
     {
         $this->message = 'Curl cookie storage error: ' . $message;

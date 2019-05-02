@@ -8,6 +8,9 @@
 
 namespace StepanSib\AlmClient;
 
+/**
+ * Class AlmRoutes
+ */
 class AlmRoutes
 {
     /**
@@ -39,23 +42,51 @@ class AlmRoutes
     }
 
 
+    /**
+     * @return string
+     */
+    /**
+     * @return string
+     */
     public function getLoginUrl()
     {
         //return $this->host . '/qcbin/authentication/sign-in';
         return $this->host . '/qcbin/authentication-point/authenticate';
     }
 
+    /**
+     * @return string
+     */
+    /**
+     * @return string
+     */
     public function getLogoutUrl()
     {
         //return $this->host . '/qcbin/authentication/sign-out';
         return $this->host . '/qcbin/authentication-point/logout';
     }
 
+    /**
+     * @return string
+     */
+    /**
+     * @return string
+     */
     public function getAuthenticationCheckUrl()
     {
         return $this->host . '/qcbin/rest/is-authenticated';
     }
 
+    /**
+     * @param $entityType
+     * @param null $entityId
+     * @return string
+     */
+    /**
+     * @param $entityType
+     * @param null $entityId
+     * @return string
+     */
     public function getEntityUrl($entityType, $entityId = null)
     {
         $url = $this->host . '/qcbin/rest/domains/' . $this->domain . '/projects/' . $this->project . '/' . $entityType;
@@ -65,6 +96,16 @@ class AlmRoutes
         return $url;
     }
 
+    /**
+     * @param $entityType
+     * @param $onlyRequiredFields
+     * @return string
+     */
+    /**
+     * @param $entityType
+     * @param $onlyRequiredFields
+     * @return string
+     */
     public function getEntityFieldsUrl($entityType, $onlyRequiredFields)
     {
         $url = $this->host . '/qcbin/rest/domains/' . $this->domain . '/projects/' . $this->project . '/customization/entities/' . $entityType . '/fields';
@@ -74,6 +115,14 @@ class AlmRoutes
         return $url;
     }
 
+    /**
+     * @param null $listId
+     * @return string
+     */
+    /**
+     * @param null $listId
+     * @return string
+     */
     public function getListsUrl($listId = null)
     {
         $url = $this->host . '/qcbin/rest/domains/' . $this->domain . '/projects/' . $this->project . '/customization/lists';
@@ -83,18 +132,48 @@ class AlmRoutes
         return $url;
     }
 
+    /**
+     * @param $entityType
+     * @param $entityId
+     * @return string
+     */
+    /**
+     * @param $entityType
+     * @param $entityId
+     * @return string
+     */
     public function getEntityCheckoutUrl($entityType, $entityId)
     {
         $url = $this->host . '/qcbin/rest/domains/' . $this->domain . '/projects/' . $this->project . '/' . $entityType . '/' . $entityId . '/versions/check-out';
         return $url;
     }
 
+    /**
+     * @param $entityType
+     * @param $entityId
+     * @return string
+     */
+    /**
+     * @param $entityType
+     * @param $entityId
+     * @return string
+     */
     public function getEntityCheckinUrl($entityType, $entityId)
     {
         $url = $this->host . '/qcbin/rest/domains/' . $this->domain . '/projects/' . $this->project . '/' . $entityType . '/' . $entityId . '/versions/check-in';
         return $url;
     }
 
+    /**
+     * @param $entityType
+     * @param $entityId
+     * @return string
+     */
+    /**
+     * @param $entityType
+     * @param $entityId
+     * @return string
+     */
     public function getEntityLockUrl($entityType, $entityId)
     {
         $url = $this->host . '/qcbin/rest/domains/' . $this->domain . '/projects/' . $this->project . '/' . $entityType . '/' . $entityId . '/lock';

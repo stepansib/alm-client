@@ -8,8 +8,12 @@
 
 namespace StepanSib\AlmClient;
 
+use SimpleXMLElement;
 use StepanSib\AlmClient\Exception\AlmEntityParametersManagerException;
 
+/**
+ * Class AlmEntityParametersManager
+ */
 class AlmEntityParametersManager
 {
 
@@ -19,7 +23,7 @@ class AlmEntityParametersManager
     /** @var AlmRoutes */
     protected $routes;
 
-    /** @var \SimpleXMLElement */
+    /** @var SimpleXMLElement */
     protected $lists;
 
     /** @var array */
@@ -39,6 +43,8 @@ class AlmEntityParametersManager
     /**
      * @return mixed
      * @throws AlmEntityParametersManagerException
+     * @throws Exception\AlmCurlException
+     * @throws Exception\AlmException
      */
     public function getLists()
     {
@@ -52,10 +58,13 @@ class AlmEntityParametersManager
     /**
      * @param $listId
      * @return array
+     * @throws AlmEntityParametersManagerException
+     * @throws Exception\AlmCurlException
+     * @throws Exception\AlmException
      */
     protected function getListValues($listId)
     {
-        $listItems = array();
+        $listItems = [];
 
         foreach ($this->getLists() as $list) {
             if ($list->Id == $listId) {
@@ -94,11 +103,11 @@ class AlmEntityParametersManager
                 return $xml->asXML();
             }
 
-            $fields = array();
+            $fields = [];
 
-            /** @var \SimpleXMLElement $field */
+            /** @var SimpleXMLElement $field */
             foreach ($xml as $field) {
-                $fieldData = array();
+                $fieldData = [];
 
                 $fieldData['label'] = (string)$field->attributes()->Label;
                 $fieldData['editable'] = (string)$field->Editable[0] == "true" ? true : false;
@@ -126,7 +135,7 @@ class AlmEntityParametersManager
      */
     public function getEntityEditableParameters(string $entityType)
     {
-        $arr = array();
+        $arr = [];
         foreach ($this->getEntityTypeFields($entityType) as $fieldName => $fieldData) {
             if ($fieldData['editable']) {
                 array_push($arr, $fieldName);

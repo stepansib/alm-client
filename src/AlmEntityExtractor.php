@@ -8,6 +8,11 @@
 
 namespace StepanSib\AlmClient;
 
+use SimpleXMLElement;
+
+/**
+ * Class AlmEntityExtractor
+ */
 class AlmEntityExtractor
 {
 
@@ -23,9 +28,19 @@ class AlmEntityExtractor
         $this->almEntityParametersManager = $almEntityParametersManager;
     }
 
-    public function pack(AlmEntity $entity, array $editableParameters = array())
+    /**
+     * @param AlmEntity $entity
+     * @param array $editableParameters
+     * @return SimpleXMLElement
+     */
+    /**
+     * @param AlmEntity $entity
+     * @param array $editableParameters
+     * @return SimpleXMLElement
+     */
+    public function pack(AlmEntity $entity, array $editableParameters = [])
     {
-        $xml = new \SimpleXMLElement('<Entity></Entity>');
+        $xml = new SimpleXMLElement('<Entity></Entity>');
         $xml->addAttribute('Type', $entity->getType());
         $xmlFields = $xml->addChild('Fields');
 
@@ -55,13 +70,13 @@ class AlmEntityExtractor
     }
 
     /**
-     * @param \SimpleXMLElement $entityXml
+     * @param SimpleXMLElement $entityXml
      * @return AlmEntity
      * @throws Exception\AlmCurlException
      * @throws Exception\AlmEntityParametersManagerException
      * @throws Exception\AlmException
      */
-    public function extract(\SimpleXMLElement $entityXml)
+    public function extract(SimpleXMLElement $entityXml)
     {
         $entity = new AlmEntity((string)$entityXml->attributes()->Type);
 

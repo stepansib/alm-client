@@ -4,10 +4,15 @@
  * @created 10/5/18 3:22 PM
  * @version 1.0
  */
+
 namespace StepanSib\AlmClient;
 
+use SimpleXMLElement;
 use StepanSib\AlmClient\Exception\AlmEntityParametersManagerException;
 
+/**
+ * Class AlmFolderManager
+ */
 class AlmFolderManager
 {
 
@@ -17,7 +22,7 @@ class AlmFolderManager
     /** @var AlmRoutes */
     protected $routes;
 
-    /** @var \SimpleXMLElement */
+    /** @var SimpleXMLElement */
     protected $folders;
 
     /**

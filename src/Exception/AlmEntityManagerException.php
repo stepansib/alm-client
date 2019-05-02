@@ -8,12 +8,20 @@
 
 namespace StepanSib\AlmClient\Exception;
 
-class AlmEntityManagerException extends \Exception
+use Exception;
+
+/**
+ * Class AlmEntityManagerException
+ */
+class AlmEntityManagerException extends Exception
 {
 
+    /**
+     * @param $message
+     */
     public function setMessage($message)
     {
-        $this->message = 'Entity manager error: '.$message;
+        $this->message = 'Entity manager error: ' . $message;
     }
 
 }
