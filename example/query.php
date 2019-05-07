@@ -13,12 +13,13 @@ use StepanSib\AlmClient\AlmClient;
 use StepanSib\AlmClient\AlmEntityManager;
 
 $almClient = new AlmClient($connectionParams);
+$attachmentManager = $almClient->getManager()->getAttachmentManager();
 
 $defects = $almClient->getManager()->getBy(AlmEntityManager::ENTITY_TYPE_DEFECT, [
     //'id' => '='.$defectId,
-    //'id' => $defectId,
+    'id' => $defectId,
     //'status' => 'Open',
-    'owner' => 'syudin',
+    //'owner' => 'syudin',
 ], [
     'name',
     'id',
@@ -42,5 +43,6 @@ foreach ($defects as $defect) {
     // echo $defect->id . '<hr/>';
 
     dump($defect);
+
     echo '<hr/>';
 }

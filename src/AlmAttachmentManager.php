@@ -9,6 +9,7 @@ namespace StepanSib\AlmClient;
 
 use Exception;
 use StepanSib\AlmClient\Exception\AlmCurlException;
+use StepanSib\AlmClient\Exception\AlmEntityException;
 use StepanSib\AlmClient\Exception\AlmEntityParametersManagerException;
 use StepanSib\AlmClient\Exception\AlmException;
 
@@ -46,7 +47,7 @@ class AlmAttachmentManager
      * @param int $entityId entity id
      * @param string $entityType entity type
      *
-     * @return array|null
+     * @return array|AlmEntity[]|null
      * @throws AlmEntityParametersManagerException
      * @throws AlmCurlException
      * @throws AlmException
@@ -73,24 +74,31 @@ class AlmAttachmentManager
     }
 
     /**
-     * @param string $path path to save the file
-     * @param string $filename file name
-     * @param int $attachmentId attachment id
-     * @return null|string
+     * @param $path
+     * @param AlmEntity $attachment
+     * @return string|null
      * @throws AlmCurlException
      * @throws AlmException
+     * @throws AlmEntityException
+     * @throws Exception
      */
-    public function downloadAttachment($path, $filename, $attachmentId)
+    public function downloadAttachment(
+        $path,
+        AlmEntity $attachment
+    )
     {
-        $file = fopen($path . $filename, 'w+');
-        $this
-            ->curl
+        $file = fopen($path . $attachment->getParameter('name'), 'w+');
+
+        $this->curl
             ->setDownload($file)
             ->setHeaders(['Accept: application/octet-stream'])
-            ->exec($this->routes->getAttachmentsDownloadUrl($attachmentId));
+            ->exec($this->routes->getAttachmentsDownloadUrl($attachment));
 
         fclose($file);
 
-        return $this->curl->getResult();
+        $result = $this->curl->getResult();
+        dump($result);
+
+        return $result;
     }
 }

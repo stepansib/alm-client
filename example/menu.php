@@ -14,6 +14,8 @@ use StepanSib\AlmClient\AlmCurlCookieStorage;
 <a style='margin-right: 15px;' href="logout.php">Logout</a>
 <a style='margin-right: 15px;' href="status.php">Connection status</a>
 <a style='margin-right: 15px;' href="query.php">Query</a>
+<a style='margin-right: 15px;' href="links.php">Defect links</a>
+<a style='margin-right: 15px;' href="attachment.php">Attachments</a>
 <a style='margin-right: 15px;' href="query_xml.php" target="_blank">XML Query</a>
 <a style='margin-right: 15px;' href="query_wrong.php">Wrong query</a>
 <a style='margin-right: 15px;' href="fields.php">Defect fields</a>

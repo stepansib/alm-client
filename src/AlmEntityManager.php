@@ -49,6 +49,9 @@ class AlmEntityManager
     /** @var AlmAttachmentManager */
     protected $attachmentsManager;
 
+    /** @var AlmDefectLinkManager */
+    protected $defectLinkManager;
+
     /** @var AlmRunStepsManager */
     protected $runStepsManager;
 
@@ -130,6 +133,23 @@ class AlmEntityManager
         }
 
         return $this->attachmentsManager;
+    }
+
+    /**
+     * @return AlmDefectLinkManager
+     */
+    public function getDefectLinkManager(): AlmDefectLinkManager
+    {
+        if ($this->defectLinkManager === null || !($this->defectLinkManager instanceof AlmDefectLinkManager)) {
+            $this->defectLinkManager = new AlmDefectLinkManager(
+                $this->curl,
+                $this->routes,
+                $this->getParametersManager(),
+                $this->getEntityExtractor()
+            );
+        }
+
+        return $this->defectLinkManager;
     }
 
     /**

@@ -104,7 +104,7 @@ class AlmEntityExtractor
      * @param $value
      * @return int|string
      */
-    protected function processValueType($value)
+    public function processValueType($value)
     {
         $value = (string)$value;
 

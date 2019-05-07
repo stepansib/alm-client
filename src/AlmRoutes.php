@@ -50,7 +50,6 @@ class AlmRoutes
      */
     public function getLoginUrl()
     {
-        //return $this->host . '/qcbin/authentication/sign-in';
         return $this->host . '/qcbin/authentication-point/authenticate';
     }
 
@@ -62,7 +61,6 @@ class AlmRoutes
      */
     public function getLogoutUrl()
     {
-        //return $this->host . '/qcbin/authentication/sign-out';
         return $this->host . '/qcbin/authentication-point/logout';
     }
 
@@ -211,31 +209,31 @@ class AlmRoutes
      */
     public function getAttachmentsUrl($entityId, $entityType)
     {
-        return sprintf(
-            '%s/qcbin/rest/domains/%s/projects/%s/%s/%d/attachments',
-            $this->host,
-            $this->domain,
-            $this->project,
-            $entityType,
-            $entityId
-        );
+        return $this->getEntityUrl($entityType . 's', $entityId) . '/attachments';
     }
 
     /**
-     * Get attachments download URL
+     * Get defect links
      *
-     * @param int $fileId attachment file name
+     * @param int $defectId
      * @return string
      */
-    public function getAttachmentsDownloadUrl($fileId)
+    public function getDefectLinksUrl(int $defectId)
     {
-        return sprintf(
-            '%s/qcbin/rest/domains/%s/projects/%s/attachments/%d',
-            $this->host,
-            $this->domain,
-            $this->project,
-            $fileId
-        );
+        return $this->getEntityUrl('defects', $defectId) . '/defect-links';
+    }
+
+    /**
+     * @param AlmEntity $attachment
+     * @return string
+     * @throws Exception\AlmEntityException
+     */
+    public function getAttachmentsDownloadUrl(AlmEntity $attachment)
+    {
+        return $this->getEntityUrl(
+                $attachment->getParameter('parent-type') . 's',
+                $attachment->getParameter('parent-id')
+            ) . '/attachments/' . $attachment->getParameter('name');
     }
 
     /**

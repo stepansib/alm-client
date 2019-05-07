@@ -163,8 +163,12 @@ Class AlmCurl
     {
         $this->curlInit();
 
-        curl_setopt($this->curl, CURLOPT_FILE, $resource);
-//        curl_setopt($this->curl, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, "GET");
+        curl_setopt($this->curl, CURLOPT_HTTPGET, true);
+
+//        curl_setopt($this->curl, CURLOPT_FILE, $resource);
+        curl_setopt($this->curl, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($this->curl, CURLOPT_MAXREDIRS, 5);
 //        curl_setopt($this->curl, CURLOPT_POSTFIELDS, $body);
 
         return $this;
