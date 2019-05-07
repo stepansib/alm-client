@@ -60,26 +60,26 @@ class AlmDefectLinkManager
         try {
             $this->curl->exec($this->routes->getDefectLinksUrl($defectId));
             $xml = simplexml_load_string($this->curl->getResult());
-        } catch (Exception $e) {
-        }
 
-        if (!is_null($xml)) {
-            foreach ($xml->children() as $nodeName => $linkedEntityData) {
-                $type = null;
-                $id = null;
-                foreach ($linkedEntityData as $field => $value) {
-                    $field = (string)$field;
-                    $value = $this->almEntityExtractor->processValueType($value);
+            if (!is_null($xml)) {
+                foreach ($xml->children() as $nodeName => $linkedEntityData) {
+                    $type = null;
+                    $id = null;
+                    foreach ($linkedEntityData as $field => $value) {
+                        $field = (string)$field;
+                        $value = $this->almEntityExtractor->processValueType($value);
 
-                    if ($field === 'second-endpoint-id') {
-                        $id = $value;
+                        if ($field === 'second-endpoint-id') {
+                            $id = $value;
+                        }
+                        if ($field === 'second-endpoint-type') {
+                            $type = $value;
+                        }
                     }
-                    if ($field === 'second-endpoint-type') {
-                        $type = $value;
-                    }
+                    $linkedDefects[] = new AlmLinkedEntity($id, $type);
                 }
-                $linkedDefects[] = new AlmLinkedEntity($id, $type);
             }
+        } catch (Exception $e) {
         }
 
         return $linkedDefects;

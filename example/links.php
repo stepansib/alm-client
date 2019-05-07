@@ -15,6 +15,7 @@ $almClient = new AlmClient($connectionParams);
 $defectLinkManager = $almClient->getManager()->getDefectLinkManager();
 
 dump($defectLinkManager->getDefectLinks(2));
-dump($defectLinkManager->getDefectLinks(5));
-dump($defectLinkManager->getDefectLinks(2488));
+dump($defectLinkManager->getDefectLinks(20));
+//dump($defectLinkManager->getDefectLinks(3661));
+//dump($defectLinkManager->getDefectLinks(3664));
 
